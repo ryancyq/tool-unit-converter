@@ -10,9 +10,14 @@
   export let defaultFrom: string = units[0].value;
   export let defaultTo: string = units[1].value;
 
-  let inputValue = "";
-  let fromUnit = defaultFrom;
-  let toUnit = defaultTo;
+  let rawValue = "";
+  let inputDisplay = "";
+  $: fromUnit = defaultFrom;
+  $: toUnit = defaultTo;
+
+  let inputEl: HTMLInputElement;
+  let mirrorWidth = 0;
+  $: suffixLeft = 16 + mirrorWidth + 8;
 
   function groupedUnits(list: UnitDef[]): [string, UnitDef[]][] {
     const map = new Map<string, UnitDef[]>();
@@ -27,19 +32,37 @@
     [fromUnit, toUnit] = [toUnit, fromUnit];
   }
 
-  function formatResult(n: number): string {
-    if (Number.isInteger(n)) return n.toString();
-    // up to 7 significant figures, strip trailing zeros
-    return parseFloat(n.toPrecision(7)).toString();
+  function formatNumber(n: number): string {
+    if (Number.isInteger(n)) return n.toLocaleString("en-US");
+    const rounded = parseFloat(n.toPrecision(7));
+    return rounded.toLocaleString("en-US", { maximumSignificantDigits: 7 });
   }
 
   $: result = (() => {
-    const num = parseFloat(inputValue);
-    if (isNaN(num) || inputValue === "") return null;
-    return convert(num, fromUnit, toUnit);
+    const num = parseFloat(rawValue);
+    if (isNaN(num)) return null;
+    const converted = convert(num, fromUnit, toUnit);
+    return isNaN(converted) ? null : converted;
   })();
 
-  $: toLabel = units.find((u) => u.value === toUnit)?.label ?? "";
+  function onInput(e: Event) {
+    const val = (e.target as HTMLInputElement).value;
+    inputDisplay = val;
+    rawValue = val.replace(/,/g, "");
+  }
+
+  function onBlur() {
+    const num = parseFloat(rawValue);
+    if (!isNaN(num)) {
+      inputDisplay = num.toLocaleString("en-US", { maximumFractionDigits: 15 });
+      inputEl.value = inputDisplay;
+    }
+  }
+
+  function onFocus() {
+    inputDisplay = rawValue;
+    inputEl.value = rawValue;
+  }
 </script>
 
 <div class="card space-y-4">
@@ -51,36 +74,35 @@
   <div
     class="flex flex-col gap-4 sm:grid sm:grid-cols-[1fr_auto_1fr] sm:items-end sm:gap-x-2"
   >
-    <!-- FROM -->
-    <div>
-      <label
-        for="from-unit"
-        class="mb-1 block text-xs font-medium uppercase tracking-wide text-slate-400"
-        >From</label
+    <div class="flex items-end gap-2 sm:contents">
+      <div class="min-w-0 flex-1">
+        <label
+          for="from-unit"
+          class="mb-1 block text-xs font-medium uppercase tracking-wide text-slate-400"
+          >From</label
+        >
+        <select id="from-unit" class="select-field" bind:value={fromUnit}>
+          {#each groupedUnits(units) as [group, groupUnits]}
+            <optgroup label={group}>
+              {#each groupUnits as unit}
+                <option value={unit.value}>{unit.label}</option>
+              {/each}
+            </optgroup>
+          {/each}
+        </select>
+      </div>
+
+      <button
+        class="flex h-[42px] w-[42px] flex-shrink-0 items-center justify-center rounded-lg border border-slate-600 text-slate-400
+               transition-colors hover:border-sky-500 hover:text-sky-400"
+        title="Swap units"
+        on:click={swap}
       >
-      <select id="from-unit" class="select-field" bind:value={fromUnit}>
-        {#each groupedUnits(units) as [group, groupUnits]}
-          <optgroup label={group}>
-            {#each groupUnits as unit}
-              <option value={unit.value}>{unit.label}</option>
-            {/each}
-          </optgroup>
-        {/each}
-      </select>
+        <ArrowUpDown size={18} class="sm:hidden" />
+        <ArrowLeftRight size={18} class="hidden sm:block" />
+      </button>
     </div>
 
-    <!-- swap -->
-    <button
-      class="flex h-[42px] w-[42px] flex-shrink-0 self-center items-center justify-center rounded-lg border border-slate-600 text-slate-400
-             transition-colors hover:border-sky-500 hover:text-sky-400 sm:self-auto"
-      title="Swap units"
-      on:click={swap}
-    >
-      <ArrowUpDown size={18} class="sm:hidden" />
-      <ArrowLeftRight size={18} class="hidden sm:block" />
-    </button>
-
-    <!-- TO -->
     <div>
       <label
         for="to-unit"
@@ -98,26 +120,42 @@
       </select>
     </div>
 
-    <!-- VALUE -->
     <div>
       <label
         for="value-input"
         class="mb-1 block text-xs font-medium uppercase tracking-wide text-slate-400"
         >Value</label
       >
-      <input
-        id="value-input"
-        type="number"
-        class="input-field"
-        placeholder="Enter value"
-        bind:value={inputValue}
-      />
+      <div
+        class="relative flex h-[42px] w-full items-center overflow-hidden rounded-lg border border-slate-600 bg-surface focus-within:border-sky-500 focus-within:ring-1 focus-within:ring-sky-500"
+      >
+        <span
+          aria-hidden="true"
+          class="invisible absolute whitespace-pre text-base"
+          bind:offsetWidth={mirrorWidth}>{inputDisplay}</span
+        >
+        <input
+          id="value-input"
+          type="text"
+          inputmode="decimal"
+          class="h-full w-full bg-transparent px-4 text-slate-100 placeholder-slate-400 outline-none"
+          placeholder="Enter value"
+          bind:this={inputEl}
+          on:input={onInput}
+          on:blur={onBlur}
+          on:focus={onFocus}
+        />
+        {#if rawValue !== ""}
+          <span
+            class="pointer-events-none absolute text-sm text-slate-400"
+            style="left: {suffixLeft}px">{fromUnit}</span
+          >
+        {/if}
+      </div>
     </div>
 
-    <!-- empty space below swap (desktop only) -->
     <div class="hidden sm:block"></div>
 
-    <!-- RESULT -->
     <div>
       <label
         for="result-output"
@@ -130,11 +168,9 @@
       >
         {#if result !== null}
           <span class="text-lg font-semibold text-sky-300"
-            >{formatResult(result)}</span
+            >{formatNumber(result)}</span
           >
-          <span class="ml-2 truncate text-sm text-slate-400"
-            >{toLabel.replace(/\s*\(.*\)/, "")}</span
-          >
+          <span class="ml-2 truncate text-sm text-slate-400">{toUnit}</span>
         {:else}
           <span class="text-slate-600">—</span>
         {/if}
