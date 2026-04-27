@@ -1,8 +1,10 @@
 <script lang="ts">
-  import { ArrowLeftRight } from "lucide-svelte";
+  import { ArrowLeftRight, ArrowUpDown, Calculator } from "lucide-svelte";
+  import type { ComponentType } from "svelte";
   import type { UnitDef } from "$lib/converters/_base";
 
   export let title: string;
+  export let icon: ComponentType = Calculator;
   export let units: UnitDef[];
   export let convert: (value: number, from: string, to: string) => number;
   export let defaultFrom: string = units[0].value;
@@ -41,9 +43,14 @@
 </script>
 
 <div class="card space-y-4">
-  <h2 class="text-xl font-semibold text-sky-400">{title}</h2>
+  <h2 class="flex items-center gap-2 text-xl font-semibold text-sky-400">
+    <svelte:component this={icon} size={22} />
+    {title}
+  </h2>
 
-  <div class="grid grid-cols-[1fr_auto_1fr] items-end gap-x-2 gap-y-4">
+  <div
+    class="flex flex-col gap-4 sm:grid sm:grid-cols-[1fr_auto_1fr] sm:items-end sm:gap-x-2"
+  >
     <!-- FROM -->
     <div>
       <label
@@ -63,12 +70,13 @@
 
     <!-- swap -->
     <button
-      class="flex h-[42px] w-[42px] flex-shrink-0 items-center justify-center rounded-lg border border-slate-600 text-slate-400
-             transition-colors hover:border-sky-500 hover:text-sky-400"
+      class="flex h-[42px] w-[42px] flex-shrink-0 self-center items-center justify-center rounded-lg border border-slate-600 text-slate-400
+             transition-colors hover:border-sky-500 hover:text-sky-400 sm:self-auto"
       title="Swap units"
       on:click={swap}
     >
-      <ArrowLeftRight size={18} />
+      <ArrowUpDown size={18} class="sm:hidden" />
+      <ArrowLeftRight size={18} class="hidden sm:block" />
     </button>
 
     <!-- TO -->
@@ -102,8 +110,8 @@
       />
     </div>
 
-    <!-- empty space below swap -->
-    <div></div>
+    <!-- empty space below swap (desktop only) -->
+    <div class="hidden sm:block"></div>
 
     <!-- RESULT -->
     <div>

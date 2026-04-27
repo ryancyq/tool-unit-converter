@@ -13,6 +13,7 @@
 
 <ConverterCard
   title={converter.title}
+  icon={converter.icon}
   units={converter.units}
   convert={(v, f, t) => converter.convert(v, f, t)}
   defaultFrom={converter.defaultFrom}
