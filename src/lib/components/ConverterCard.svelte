@@ -1,6 +1,6 @@
 <script lang="ts">
   import { ArrowLeftRight } from "lucide-svelte";
-  import type { UnitDef } from "$lib/conversions";
+  import type { UnitDef } from "$lib/converters/_base";
 
   export let title: string;
   export let units: UnitDef[];
@@ -43,9 +43,9 @@
 <div class="card space-y-4">
   <h2 class="text-xl font-semibold text-sky-400">{title}</h2>
 
-  <!-- unit selects + swap -->
-  <div class="flex items-center gap-2">
-    <div class="flex-1">
+  <div class="grid grid-cols-[1fr_auto_1fr] items-end gap-x-2 gap-y-4">
+    <!-- FROM -->
+    <div>
       <label
         class="mb-1 block text-xs font-medium uppercase tracking-wide text-slate-400"
         >From</label
@@ -61,16 +61,18 @@
       </select>
     </div>
 
+    <!-- swap -->
     <button
-      class="mt-5 flex-shrink-0 rounded-lg border border-slate-600 p-2 text-slate-400
-			       transition-colors hover:border-sky-500 hover:text-sky-400"
+      class="flex h-[42px] w-[42px] flex-shrink-0 items-center justify-center rounded-lg border border-slate-600 text-slate-400
+             transition-colors hover:border-sky-500 hover:text-sky-400"
       title="Swap units"
       on:click={swap}
     >
       <ArrowLeftRight size={18} />
     </button>
 
-    <div class="flex-1">
+    <!-- TO -->
+    <div>
       <label
         class="mb-1 block text-xs font-medium uppercase tracking-wide text-slate-400"
         >To</label
@@ -85,10 +87,8 @@
         {/each}
       </select>
     </div>
-  </div>
 
-  <!-- input / result row -->
-  <div class="grid grid-cols-2 gap-4">
+    <!-- VALUE -->
     <div>
       <label
         class="mb-1 block text-xs font-medium uppercase tracking-wide text-slate-400"
@@ -102,6 +102,10 @@
       />
     </div>
 
+    <!-- empty space below swap -->
+    <div></div>
+
+    <!-- RESULT -->
     <div>
       <label
         class="mb-1 block text-xs font-medium uppercase tracking-wide text-slate-400"

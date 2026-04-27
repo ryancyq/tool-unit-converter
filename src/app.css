@@ -22,8 +22,18 @@
 		       placeholder-slate-400 focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500;
   }
 
+  .input-field[type="number"]::-webkit-inner-spin-button,
+  .input-field[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
+  .input-field[type="number"] {
+    -moz-appearance: textfield;
+  }
+
   .select-field {
-    @apply w-full rounded-lg border border-slate-600 bg-surface px-4 py-2 text-slate-100
+    @apply h-[42px] w-full rounded-lg border border-slate-600 bg-surface px-4 py-2 text-slate-100
 		       focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500;
   }
 }

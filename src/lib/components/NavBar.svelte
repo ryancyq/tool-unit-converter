@@ -1,16 +1,12 @@
 <script lang="ts">
   import { base } from "$app/paths";
   import { Wrench } from "lucide-svelte";
+  import { all } from "$lib/converters/index";
 
-  const links = [
-    { href: `${base}/length`, label: "Length" },
-    { href: `${base}/weight`, label: "Weight" },
-    { href: `${base}/temperature`, label: "Temperature" },
-    { href: `${base}/area`, label: "Area" },
-    { href: `${base}/volume`, label: "Volume" },
-    { href: `${base}/speed`, label: "Speed" },
-    { href: `${base}/data`, label: "Data" },
-  ];
+  const links = all().map((c) => ({
+    href: `${base}/${c.slug}`,
+    label: c.label,
+  }));
 </script>
 
 <nav class="border-b border-slate-700 bg-surface-card">

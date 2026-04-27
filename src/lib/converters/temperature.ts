@@ -1,0 +1,43 @@
+import { Thermometer } from "lucide-svelte";
+import { Converter } from "./_base";
+import type { UnitDef } from "./_base";
+
+class TemperatureConverter extends Converter {
+  slug = "temperature";
+  order = 3;
+  title = "Temperature Converter";
+  label = "Temperature";
+  icon = Thermometer;
+  desc = "°C, °F, K";
+  defaultFrom = "c";
+  defaultTo = "f";
+  units: UnitDef[] = [
+    { label: "Celsius (°C)", value: "c", group: "Metric" },
+    { label: "Kelvin (K)", value: "k", group: "Metric" },
+    { label: "Fahrenheit (°F)", value: "f", group: "Imperial" },
+  ];
+
+  convert(value: number, from: string, to: string): number {
+    let celsius: number;
+    switch (from) {
+      case "f":
+        celsius = ((value - 32) * 5) / 9;
+        break;
+      case "k":
+        celsius = value - 273.15;
+        break;
+      default:
+        celsius = value;
+    }
+    switch (to) {
+      case "f":
+        return (celsius * 9) / 5 + 32;
+      case "k":
+        return celsius + 273.15;
+      default:
+        return celsius;
+    }
+  }
+}
+
+export default new TemperatureConverter();

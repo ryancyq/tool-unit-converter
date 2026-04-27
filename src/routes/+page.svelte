@@ -1,65 +1,8 @@
 <script lang="ts">
   import { base } from "$app/paths";
-  import {
-    Ruler,
-    Scale,
-    Thermometer,
-    Grid2x2,
-    FlaskConical,
-    Gauge,
-    HardDrive,
-  } from "lucide-svelte";
-  import type { ComponentType } from "svelte";
+  import { all } from "$lib/converters/index";
 
-  const converters: {
-    href: string;
-    label: string;
-    icon: ComponentType;
-    desc: string;
-  }[] = [
-    {
-      href: `${base}/length`,
-      label: "Length",
-      icon: Ruler,
-      desc: "km, m, cm, mi, ft, in…",
-    },
-    {
-      href: `${base}/weight`,
-      label: "Weight",
-      icon: Scale,
-      desc: "kg, g, lb, oz, st…",
-    },
-    {
-      href: `${base}/temperature`,
-      label: "Temperature",
-      icon: Thermometer,
-      desc: "°C, °F, K",
-    },
-    {
-      href: `${base}/area`,
-      label: "Area",
-      icon: Grid2x2,
-      desc: "m², ha, ac, ft²…",
-    },
-    {
-      href: `${base}/volume`,
-      label: "Volume",
-      icon: FlaskConical,
-      desc: "L, mL, gal, pt, fl oz…",
-    },
-    {
-      href: `${base}/speed`,
-      label: "Speed",
-      icon: Gauge,
-      desc: "m/s, km/h, mph, kn, Mach…",
-    },
-    {
-      href: `${base}/data`,
-      label: "Data",
-      icon: HardDrive,
-      desc: "B, KB, MB, GB, TiB…",
-    },
-  ];
+  const converters = all();
 </script>
 
 <svelte:head>
@@ -79,7 +22,7 @@
   <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
     {#each converters as c}
       <a
-        href={c.href}
+        href="{base}/{c.slug}"
         class="card group flex flex-col gap-3 transition-colors hover:border hover:border-sky-600"
       >
         <svelte:component this={c.icon} size={32} class="text-sky-400" />
