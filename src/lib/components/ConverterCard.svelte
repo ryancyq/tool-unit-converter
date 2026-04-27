@@ -54,10 +54,11 @@
     <!-- FROM -->
     <div>
       <label
+        for="from-unit"
         class="mb-1 block text-xs font-medium uppercase tracking-wide text-slate-400"
         >From</label
       >
-      <select class="select-field" bind:value={fromUnit}>
+      <select id="from-unit" class="select-field" bind:value={fromUnit}>
         {#each groupedUnits(units) as [group, groupUnits]}
           <optgroup label={group}>
             {#each groupUnits as unit}
@@ -82,10 +83,11 @@
     <!-- TO -->
     <div>
       <label
+        for="to-unit"
         class="mb-1 block text-xs font-medium uppercase tracking-wide text-slate-400"
         >To</label
       >
-      <select class="select-field" bind:value={toUnit}>
+      <select id="to-unit" class="select-field" bind:value={toUnit}>
         {#each groupedUnits(units) as [group, groupUnits]}
           <optgroup label={group}>
             {#each groupUnits as unit}
@@ -99,10 +101,12 @@
     <!-- VALUE -->
     <div>
       <label
+        for="value-input"
         class="mb-1 block text-xs font-medium uppercase tracking-wide text-slate-400"
         >Value</label
       >
       <input
+        id="value-input"
         type="number"
         class="input-field"
         placeholder="Enter value"
@@ -116,10 +120,12 @@
     <!-- RESULT -->
     <div>
       <label
+        for="result-output"
         class="mb-1 block text-xs font-medium uppercase tracking-wide text-slate-400"
         >Result</label
       >
-      <div
+      <output
+        id="result-output"
         class="flex h-[42px] items-center rounded-lg border border-slate-700 bg-surface px-4"
       >
         {#if result !== null}
@@ -132,7 +138,7 @@
         {:else}
           <span class="text-slate-600">—</span>
         {/if}
-      </div>
+      </output>
     </div>
   </div>
 </div>
