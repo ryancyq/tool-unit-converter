@@ -3,9 +3,35 @@
   import NavBar from "$lib/components/NavBar.svelte";
   import UpdateBanner from "$lib/components/UpdateBanner.svelte";
   import { onMount } from "svelte";
+  import { afterNavigate } from "$app/navigation";
   import { initPWA } from "$lib/pwa";
+  import { env } from "$env/dynamic/public";
 
-  onMount(() => initPWA());
+  const GA_ID = env.PUBLIC_GA_MEASUREMENT_ID;
+
+  onMount(() => {
+    initPWA();
+
+    if (!GA_ID || navigator.doNotTrack === "1") return;
+
+    const script = document.createElement("script");
+    script.async = true;
+    script.src = `https://www.googletagmanager.com/gtag/js?id=${GA_ID}`;
+    document.head.appendChild(script);
+
+    window.dataLayer = window.dataLayer || [];
+    window.gtag = function () {
+      window.dataLayer.push(arguments);
+    };
+    window.gtag("js", new Date());
+  });
+
+  afterNavigate(({ to }) => {
+    if (!GA_ID || typeof window.gtag === "undefined") return;
+    window.gtag("config", GA_ID, {
+      page_path: to?.url.pathname,
+    });
+  });
 </script>
 
 <NavBar />
