@@ -12,15 +12,45 @@ class AreaConverter extends LinearConverter {
   defaultFrom = "m2";
   defaultTo = "ft2";
   units: UnitDef[] = [
-    { label: "Square kilometre (km²)", value: "km2", group: "Metric" },
-    { label: "Square metre (m²)", value: "m2", group: "Metric" },
-    { label: "Square centimetre (cm²)", value: "cm2", group: "Metric" },
-    { label: "Hectare (ha)", value: "ha", group: "Metric" },
-    { label: "Acre (ac)", value: "ac", group: "Imperial" },
-    { label: "Square mile (mi²)", value: "mi2", group: "Imperial" },
-    { label: "Square yard (yd²)", value: "yd2", group: "Imperial" },
-    { label: "Square foot (ft²)", value: "ft2", group: "Imperial" },
-    { label: "Square inch (in²)", value: "in2", group: "Imperial" },
+    {
+      label: "km²",
+      value: "km2",
+      description: "Square kilometre",
+      group: "Metric",
+    },
+    { label: "m²", value: "m2", description: "Square metre", group: "Metric" },
+    {
+      label: "cm²",
+      value: "cm2",
+      description: "Square centimetre",
+      group: "Metric",
+    },
+    { label: "ha", value: "ha", description: "Hectare", group: "Metric" },
+    { label: "ac", value: "ac", description: "Acre", group: "Imperial" },
+    {
+      label: "mi²",
+      value: "mi2",
+      description: "Square mile",
+      group: "Imperial",
+    },
+    {
+      label: "yd²",
+      value: "yd2",
+      description: "Square yard",
+      group: "Imperial",
+    },
+    {
+      label: "ft²",
+      value: "ft2",
+      description: "Square foot",
+      group: "Imperial",
+    },
+    {
+      label: "in²",
+      value: "in2",
+      description: "Square inch",
+      group: "Imperial",
+    },
   ];
   protected factors = {
     km2: 1e6,

@@ -12,12 +12,22 @@ class SpeedConverter extends LinearConverter {
   defaultFrom = "kmh";
   defaultTo = "mph";
   units: UnitDef[] = [
-    { label: "Metre/second (m/s)", value: "ms", group: "Metric" },
-    { label: "Kilometre/hour (km/h)", value: "kmh", group: "Metric" },
-    { label: "Mile/hour (mph)", value: "mph", group: "Imperial" },
-    { label: "Foot/second (ft/s)", value: "fts", group: "Imperial" },
-    { label: "Knot (kn)", value: "kn", group: "Other" },
-    { label: "Mach (M)", value: "mach", group: "Other" },
+    { label: "m/s", value: "ms", description: "Metre/second", group: "Metric" },
+    {
+      label: "km/h",
+      value: "kmh",
+      description: "Kilometre/hour",
+      group: "Metric",
+    },
+    { label: "mph", value: "mph", description: "Mile/hour", group: "Imperial" },
+    {
+      label: "ft/s",
+      value: "fts",
+      description: "Foot/second",
+      group: "Imperial",
+    },
+    { label: "kn", value: "kn", description: "Knot", group: "Other" },
+    { label: "Mach", value: "mach", description: "Mach", group: "Other" },
   ];
   protected factors = {
     ms: 1,

@@ -12,16 +12,21 @@ class LengthConverter extends LinearConverter {
   defaultFrom = "m";
   defaultTo = "ft";
   units: UnitDef[] = [
-    { label: "Kilometre (km)", value: "km", group: "Metric" },
-    { label: "Metre (m)", value: "m", group: "Metric" },
-    { label: "Centimetre (cm)", value: "cm", group: "Metric" },
-    { label: "Millimetre (mm)", value: "mm", group: "Metric" },
-    { label: "Micrometre (µm)", value: "um", group: "Metric" },
-    { label: "Mile (mi)", value: "mi", group: "Imperial" },
-    { label: "Yard (yd)", value: "yd", group: "Imperial" },
-    { label: "Foot (ft)", value: "ft", group: "Imperial" },
-    { label: "Inch (in)", value: "in", group: "Imperial" },
-    { label: "Nautical mile (nmi)", value: "nmi", group: "Imperial" },
+    { label: "km", value: "km", description: "Kilometre", group: "Metric" },
+    { label: "m", value: "m", description: "Metre", group: "Metric" },
+    { label: "cm", value: "cm", description: "Centimetre", group: "Metric" },
+    { label: "mm", value: "mm", description: "Millimetre", group: "Metric" },
+    { label: "µm", value: "um", description: "Micrometre", group: "Metric" },
+    { label: "mi", value: "mi", description: "Mile", group: "Imperial" },
+    { label: "yd", value: "yd", description: "Yard", group: "Imperial" },
+    { label: "ft", value: "ft", description: "Foot", group: "Imperial" },
+    { label: "in", value: "in", description: "Inch", group: "Imperial" },
+    {
+      label: "nmi",
+      value: "nmi",
+      description: "Nautical mile",
+      group: "Imperial",
+    },
   ];
   protected factors = {
     km: 1000,

@@ -1,6 +1,11 @@
 import type { ComponentType } from "svelte";
 
-export type UnitDef = { label: string; value: string; group: string };
+export type UnitDef = {
+  label: string;
+  value: string;
+  description: string;
+  group: string;
+};
 
 export abstract class Converter {
   abstract readonly slug: string;

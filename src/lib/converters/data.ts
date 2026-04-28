@@ -12,17 +12,62 @@ class DataConverter extends LinearConverter {
   defaultFrom = "MB";
   defaultTo = "MiB";
   units: UnitDef[] = [
-    { label: "Bit (b)", value: "b", group: "Decimal (SI)" },
-    { label: "Byte (B)", value: "B", group: "Decimal (SI)" },
-    { label: "Kilobyte (KB)", value: "KB", group: "Decimal (SI)" },
-    { label: "Megabyte (MB)", value: "MB", group: "Decimal (SI)" },
-    { label: "Gigabyte (GB)", value: "GB", group: "Decimal (SI)" },
-    { label: "Terabyte (TB)", value: "TB", group: "Decimal (SI)" },
-    { label: "Petabyte (PB)", value: "PB", group: "Decimal (SI)" },
-    { label: "Kibibyte (KiB)", value: "KiB", group: "Binary (IEC)" },
-    { label: "Mebibyte (MiB)", value: "MiB", group: "Binary (IEC)" },
-    { label: "Gibibyte (GiB)", value: "GiB", group: "Binary (IEC)" },
-    { label: "Tebibyte (TiB)", value: "TiB", group: "Binary (IEC)" },
+    { label: "b", value: "b", description: "Bit", group: "Decimal (SI)" },
+    { label: "B", value: "B", description: "Byte", group: "Decimal (SI)" },
+    {
+      label: "KB",
+      value: "KB",
+      description: "Kilobyte",
+      group: "Decimal (SI)",
+    },
+    {
+      label: "MB",
+      value: "MB",
+      description: "Megabyte",
+      group: "Decimal (SI)",
+    },
+    {
+      label: "GB",
+      value: "GB",
+      description: "Gigabyte",
+      group: "Decimal (SI)",
+    },
+    {
+      label: "TB",
+      value: "TB",
+      description: "Terabyte",
+      group: "Decimal (SI)",
+    },
+    {
+      label: "PB",
+      value: "PB",
+      description: "Petabyte",
+      group: "Decimal (SI)",
+    },
+    {
+      label: "KiB",
+      value: "KiB",
+      description: "Kibibyte",
+      group: "Binary (IEC)",
+    },
+    {
+      label: "MiB",
+      value: "MiB",
+      description: "Mebibyte",
+      group: "Binary (IEC)",
+    },
+    {
+      label: "GiB",
+      value: "GiB",
+      description: "Gibibyte",
+      group: "Binary (IEC)",
+    },
+    {
+      label: "TiB",
+      value: "TiB",
+      description: "Tebibyte",
+      group: "Binary (IEC)",
+    },
   ];
   protected factors = {
     b: 0.125,

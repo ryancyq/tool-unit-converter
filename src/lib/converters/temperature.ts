@@ -12,9 +12,9 @@ class TemperatureConverter extends Converter {
   defaultFrom = "c";
   defaultTo = "f";
   units: UnitDef[] = [
-    { label: "Celsius (°C)", value: "c", group: "Metric" },
-    { label: "Kelvin (K)", value: "k", group: "Metric" },
-    { label: "Fahrenheit (°F)", value: "f", group: "Imperial" },
+    { label: "°C", value: "c", description: "Celsius", group: "Metric" },
+    { label: "K", value: "k", description: "Kelvin", group: "Metric" },
+    { label: "°F", value: "f", description: "Fahrenheit", group: "Imperial" },
   ];
 
   convert(value: number, from: string, to: string): number {

@@ -12,17 +12,47 @@ class VolumeConverter extends LinearConverter {
   defaultFrom = "L";
   defaultTo = "gal";
   units: UnitDef[] = [
-    { label: "Cubic metre (m³)", value: "m3", group: "Metric" },
-    { label: "Litre (L)", value: "L", group: "Metric" },
-    { label: "Millilitre (mL)", value: "mL", group: "Metric" },
-    { label: "US gallon (gal)", value: "gal", group: "Imperial (US)" },
-    { label: "US quart (qt)", value: "qt", group: "Imperial (US)" },
-    { label: "US pint (pt)", value: "pt", group: "Imperial (US)" },
-    { label: "US cup (cup)", value: "cup", group: "Imperial (US)" },
-    { label: "US fl oz (fl oz)", value: "floz", group: "Imperial (US)" },
-    { label: "Imperial gallon", value: "impgal", group: "Imperial (UK)" },
-    { label: "Cubic inch (in³)", value: "in3", group: "Other" },
-    { label: "Cubic foot (ft³)", value: "ft3", group: "Other" },
+    { label: "m³", value: "m3", description: "Cubic metre", group: "Metric" },
+    { label: "L", value: "L", description: "Litre", group: "Metric" },
+    { label: "mL", value: "mL", description: "Millilitre", group: "Metric" },
+    {
+      label: "gal",
+      value: "gal",
+      description: "US gallon",
+      group: "Imperial (US)",
+    },
+    {
+      label: "qt",
+      value: "qt",
+      description: "US quart",
+      group: "Imperial (US)",
+    },
+    {
+      label: "pt",
+      value: "pt",
+      description: "US pint",
+      group: "Imperial (US)",
+    },
+    {
+      label: "cup",
+      value: "cup",
+      description: "US cup",
+      group: "Imperial (US)",
+    },
+    {
+      label: "fl oz",
+      value: "floz",
+      description: "US fl oz",
+      group: "Imperial (US)",
+    },
+    {
+      label: "imp gal",
+      value: "impgal",
+      description: "Imperial gallon",
+      group: "Imperial (UK)",
+    },
+    { label: "in³", value: "in3", description: "Cubic inch", group: "Other" },
+    { label: "ft³", value: "ft3", description: "Cubic foot", group: "Other" },
   ];
   protected factors = {
     m3: 1000,

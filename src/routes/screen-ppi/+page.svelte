@@ -28,13 +28,43 @@
     {
       group: "Apple",
       presets: [
-        { label: "MacBook Air 13\" (M2/M3) — 2560 × 1664", w: 2560, h: 1664, diag: 13.6 },
-        { label: "MacBook Air 15\" (M2/M3) — 2880 × 1864", w: 2880, h: 1864, diag: 15.3 },
-        { label: "MacBook Pro 14\" — 3024 × 1964", w: 3024, h: 1964, diag: 14.2 },
-        { label: "MacBook Pro 16\" — 3456 × 2234", w: 3456, h: 2234, diag: 16.2 },
-        { label: "iMac 24\" — 4480 × 2520", w: 4480, h: 2520, diag: 23.5 },
-        { label: "Studio Display 27\" (5K Retina) — 5120 × 2880", w: 5120, h: 2880, diag: 27 },
-        { label: "Pro Display XDR 32\" (6K Retina) — 6016 × 3384", w: 6016, h: 3384, diag: 31.6 },
+        {
+          label: 'MacBook Air 13" (M2/M3) — 2560 × 1664',
+          w: 2560,
+          h: 1664,
+          diag: 13.6,
+        },
+        {
+          label: 'MacBook Air 15" (M2/M3) — 2880 × 1864',
+          w: 2880,
+          h: 1864,
+          diag: 15.3,
+        },
+        {
+          label: 'MacBook Pro 14" — 3024 × 1964',
+          w: 3024,
+          h: 1964,
+          diag: 14.2,
+        },
+        {
+          label: 'MacBook Pro 16" — 3456 × 2234',
+          w: 3456,
+          h: 2234,
+          diag: 16.2,
+        },
+        { label: 'iMac 24" — 4480 × 2520', w: 4480, h: 2520, diag: 23.5 },
+        {
+          label: 'Studio Display 27" (5K Retina) — 5120 × 2880',
+          w: 5120,
+          h: 2880,
+          diag: 27,
+        },
+        {
+          label: 'Pro Display XDR 32" (6K Retina) — 6016 × 3384',
+          w: 6016,
+          h: 3384,
+          diag: 31.6,
+        },
       ],
     },
   ];
@@ -183,12 +213,19 @@
           class="mb-1 block text-xs font-medium uppercase tracking-wide text-slate-400"
           >Resolution preset</label
         >
-        <select id="preset" class="select-field text-sm" on:change={applyPreset}>
+        <select
+          id="preset"
+          class="select-field text-sm"
+          on:change={applyPreset}
+        >
           <option value="">Select a display…</option>
           {#each presetGroups as { group, presets }, gi}
             <optgroup label={group}>
               {#each presets as p, pi}
-                {@const idx = presetGroups.slice(0, gi).reduce((s, g) => s + g.presets.length, 0) + pi}
+                {@const idx =
+                  presetGroups
+                    .slice(0, gi)
+                    .reduce((s, g) => s + g.presets.length, 0) + pi}
                 <option value={idx}>{p.label}</option>
               {/each}
             </optgroup>
@@ -212,7 +249,8 @@
             bind:value={horizRes}
             class="input-field h-full w-full pr-14"
           />
-          <span class="pointer-events-none absolute right-3 text-sm text-slate-400"
+          <span
+            class="pointer-events-none absolute right-3 text-sm text-slate-400"
             >px</span
           >
         </div>
@@ -233,7 +271,8 @@
             bind:value={vertRes}
             class="input-field h-full w-full pr-14"
           />
-          <span class="pointer-events-none absolute right-3 text-sm text-slate-400"
+          <span
+            class="pointer-events-none absolute right-3 text-sm text-slate-400"
             >px</span
           >
         </div>
@@ -243,34 +282,39 @@
     {#if valid && ppi !== null}
       <div class="space-y-3 border-t border-slate-700 pt-4">
         <div class="flex items-baseline gap-3">
-          <span class="text-5xl font-bold text-sky-300">{fmt(ppi, 1)}</span>
+          <span id="ppi-result" class="text-5xl font-bold text-sky-300"
+            >{fmt(ppi, 1)}</span
+          >
           <span class="text-xl text-slate-400">PPI</span>
         </div>
 
-          {#if physWidthIn !== null && physHeightIn !== null}
-            <div
-              class="rounded-lg border border-slate-700 bg-slate-800/40 px-4 py-3"
+        {#if physWidthIn !== null && physHeightIn !== null}
+          <div
+            class="rounded-lg border border-slate-700 bg-slate-800/40 px-4 py-3"
+          >
+            <p
+              class="text-xs font-medium uppercase tracking-wide text-slate-500"
             >
-              <p
-                class="text-xs font-medium uppercase tracking-wide text-slate-500"
-              >
-                Physical display size
-              </p>
-              <p class="mt-1 text-lg font-semibold text-slate-200">
-                {#if diagUnit === "in"}
-                  {fmt(physWidthIn, 2)}" × {fmt(physHeightIn, 2)}"
-                  <span class="ml-2 text-sm font-normal text-slate-400">
-                    ({fmt(physWidthIn * 2.54, 2)} cm × {fmt(physHeightIn * 2.54, 2)} cm)
-                  </span>
-                {:else}
-                  {fmt(physWidthIn * 2.54, 2)} cm × {fmt(physHeightIn * 2.54, 2)} cm
-                  <span class="ml-2 text-sm font-normal text-slate-400">
-                    ({fmt(physWidthIn, 2)}" × {fmt(physHeightIn, 2)}")
-                  </span>
-                {/if}
-              </p>
-            </div>
-          {/if}
+              Physical display size
+            </p>
+            <p class="mt-1 text-lg font-semibold text-slate-200">
+              {#if diagUnit === "in"}
+                {fmt(physWidthIn, 2)}" × {fmt(physHeightIn, 2)}"
+                <span class="ml-2 text-sm font-normal text-slate-400">
+                  ({fmt(physWidthIn * 2.54, 2)} cm × {fmt(
+                    physHeightIn * 2.54,
+                    2,
+                  )} cm)
+                </span>
+              {:else}
+                {fmt(physWidthIn * 2.54, 2)} cm × {fmt(physHeightIn * 2.54, 2)} cm
+                <span class="ml-2 text-sm font-normal text-slate-400">
+                  ({fmt(physWidthIn, 2)}" × {fmt(physHeightIn, 2)}")
+                </span>
+              {/if}
+            </p>
+          </div>
+        {/if}
 
         <!-- megapixels / aspect ratio / dot pitch -->
         <div class="grid grid-cols-3 gap-3">

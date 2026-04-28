@@ -19,6 +19,10 @@
   let mirrorWidth = 0;
   $: suffixLeft = 16 + mirrorWidth + 8;
 
+  function unitLabel(value: string): string {
+    return units.find((u) => u.value === value)?.label ?? value;
+  }
+
   function groupedUnits(list: UnitDef[]): [string, UnitDef[]][] {
     const map = new Map<string, UnitDef[]>();
     for (const u of list) {
@@ -85,7 +89,9 @@
           {#each groupedUnits(units) as [group, groupUnits]}
             <optgroup label={group}>
               {#each groupUnits as unit}
-                <option value={unit.value}>{unit.label}</option>
+                <option value={unit.value}
+                  >{unit.description} ({unit.label})</option
+                >
               {/each}
             </optgroup>
           {/each}
@@ -113,7 +119,9 @@
         {#each groupedUnits(units) as [group, groupUnits]}
           <optgroup label={group}>
             {#each groupUnits as unit}
-              <option value={unit.value}>{unit.label}</option>
+              <option value={unit.value}
+                >{unit.description} ({unit.label})</option
+              >
             {/each}
           </optgroup>
         {/each}
@@ -148,7 +156,7 @@
         {#if rawValue !== ""}
           <span
             class="pointer-events-none absolute text-sm text-slate-400"
-            style="left: {suffixLeft}px">{fromUnit}</span
+            style="left: {suffixLeft}px">{unitLabel(fromUnit)}</span
           >
         {/if}
       </div>
@@ -170,7 +178,9 @@
           <span class="text-lg font-semibold text-sky-300"
             >{formatNumber(result)}</span
           >
-          <span class="ml-2 truncate text-sm text-slate-400">{toUnit}</span>
+          <span class="ml-2 truncate text-sm text-slate-400"
+            >{unitLabel(toUnit)}</span
+          >
         {:else}
           <span class="text-slate-600">—</span>
         {/if}

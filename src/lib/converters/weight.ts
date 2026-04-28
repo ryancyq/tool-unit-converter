@@ -12,13 +12,13 @@ class WeightConverter extends LinearConverter {
   defaultFrom = "kg";
   defaultTo = "lb";
   units: UnitDef[] = [
-    { label: "Tonne (t)", value: "t", group: "Metric" },
-    { label: "Kilogram (kg)", value: "kg", group: "Metric" },
-    { label: "Gram (g)", value: "g", group: "Metric" },
-    { label: "Milligram (mg)", value: "mg", group: "Metric" },
-    { label: "Pound (lb)", value: "lb", group: "Imperial" },
-    { label: "Ounce (oz)", value: "oz", group: "Imperial" },
-    { label: "Stone (st)", value: "st", group: "Imperial" },
+    { label: "t", value: "t", description: "Tonne", group: "Metric" },
+    { label: "kg", value: "kg", description: "Kilogram", group: "Metric" },
+    { label: "g", value: "g", description: "Gram", group: "Metric" },
+    { label: "mg", value: "mg", description: "Milligram", group: "Metric" },
+    { label: "lb", value: "lb", description: "Pound", group: "Imperial" },
+    { label: "oz", value: "oz", description: "Ounce", group: "Imperial" },
+    { label: "st", value: "st", description: "Stone", group: "Imperial" },
   ];
   protected factors = {
     t: 1000,
