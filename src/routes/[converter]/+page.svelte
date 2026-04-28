@@ -8,7 +8,7 @@
 </script>
 
 <svelte:head>
-  <title>{converter.title} · Conversion Tools</title>
+  <title>{converter.title} · Unit Conversion</title>
 </svelte:head>
 
 <ConverterCard

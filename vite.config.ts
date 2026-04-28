@@ -13,9 +13,9 @@ export default defineConfig({
       registerType: "prompt",
       injectRegister: "script-defer",
       manifest: {
-        name: "Conversion Tools",
-        short_name: "Converters",
-        description: "Unit and measurement conversion tools — works offline",
+        name: "Unit Conversion Tool",
+        short_name: "Unit Converters",
+        description: "Unit and measurement conversion tool — works offline",
         theme_color: "#1e293b",
         background_color: "#0f172a",
         display: "standalone",

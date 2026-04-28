@@ -16,7 +16,7 @@
 
 <div class="space-y-8">
   <header class="text-center">
-    <h1 class="text-4xl font-bold text-sky-400">Conversion Tools</h1>
+    <h1 class="text-4xl font-bold text-sky-400">Unit Conversion Tool</h1>
     <p class="mt-2 text-slate-400">Fast, offline-capable unit converters</p>
   </header>
 

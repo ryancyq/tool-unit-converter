@@ -1,18 +1,19 @@
-# Conversion Tools
+# Unit Conversion Tool
 
-Fast, offline-capable unit conversion tools.
+Fast, offline-capable unit converters and measurement tools.
 
-## Converters
+## Tools
 
-| Converter   | Notable units                                               |
-| ----------- | ----------------------------------------------------------- |
-| Length      | km, m, cm, mm, µm, mi, yd, ft, in, nautical mile            |
-| Weight      | tonne, kg, g, mg, lb, oz, stone                             |
-| Temperature | °C, °F, K                                                   |
-| Area        | km², m², cm², ha, acre, mi², yd², ft², in²                  |
-| Volume      | m³, L, mL, US/Imperial gallon, qt, pt, cup, fl oz, in³, ft³ |
-| Speed       | m/s, km/h, mph, ft/s, knot, Mach                            |
-| Data        | Bit, B, KB–PB (SI) and KiB–TiB (IEC binary)                 |
+| Tool        | Description / Notable units                                          |
+| ----------- | -------------------------------------------------------------------- |
+| Length      | km, m, cm, mm, µm, mi, yd, ft, in, nmi                               |
+| Weight      | t, kg, g, mg, lb, oz, st                                             |
+| Temperature | °C, °F, K                                                            |
+| Area        | km², m², cm², ha, ac, mi², yd², ft², in²                             |
+| Volume      | m³, L, mL, gal (US), imp gal, qt, pt, cup, fl oz, in³, ft³           |
+| Speed       | m/s, km/h, mph, ft/s, kn, Mach                                       |
+| Data        | b, B, KB–PB (SI decimal) and KiB–TiB (IEC binary)                    |
+| Screen PPI  | PPI, megapixels, aspect ratio, dot pitch — macOS HiDPI scaling check |
 
 ## Getting Started
 

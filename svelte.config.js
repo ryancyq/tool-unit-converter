@@ -13,7 +13,6 @@ const config = {
       strict: true,
     }),
     paths: {
-      // Set base path for GitHub Pages repo deployment (e.g. /tools)
       base: process.env.BASE_PATH ?? "",
     },
   },

@@ -22,7 +22,7 @@
       class="mr-4 flex flex-shrink-0 items-center gap-2 font-bold text-sky-400"
     >
       <Wrench size={18} />
-      <span>Tools</span>
+      <span>Unit Conversion</span>
     </a>
 
     <!-- desktop links -->
