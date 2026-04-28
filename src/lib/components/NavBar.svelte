@@ -1,13 +1,16 @@
 <script lang="ts">
   import { base } from "$app/paths";
-  import { Menu, Wrench, X } from "lucide-svelte";
+  import { Menu, Monitor, Wrench, X } from "lucide-svelte";
   import { all } from "$lib/converters/index";
 
-  const links = all().map((c) => ({
-    href: `${base}/${c.slug}`,
-    label: c.label,
-    icon: c.icon,
-  }));
+  const links = [
+    ...all().map((c) => ({
+      href: `${base}/${c.slug}`,
+      label: c.label,
+      icon: c.icon,
+    })),
+    { href: `${base}/screen-ppi`, label: "Screen PPI", icon: Monitor },
+  ];
 
   let mobileOpen = false;
 </script>

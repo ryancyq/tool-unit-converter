@@ -1,5 +1,6 @@
 <script lang="ts">
   import { base } from "$app/paths";
+  import { Monitor } from "lucide-svelte";
   import { all } from "$lib/converters/index";
 
   const converters = all();
@@ -33,5 +34,17 @@
         <span class="text-sm text-slate-400">{c.desc}</span>
       </a>
     {/each}
+    <a
+      href="{base}/screen-ppi"
+      class="card group flex flex-col gap-3 transition-colors hover:border hover:border-sky-600"
+    >
+      <Monitor size={32} class="text-sky-400" />
+      <span class="text-lg font-semibold text-sky-300 group-hover:text-sky-200"
+        >Screen PPI</span
+      >
+      <span class="text-sm text-slate-400"
+        >PPI, megapixels, aspect ratio — macOS HiDPI scaling check</span
+      >
+    </a>
   </div>
 </div>
