@@ -1,8 +1,5 @@
 import { test, expect, type Page } from "@playwright/test";
-
-async function waitForHydration(page: Page) {
-  await page.waitForLoadState("networkidle");
-}
+import { waitForHydration } from "./helpers";
 
 async function convert(
   page: Page,

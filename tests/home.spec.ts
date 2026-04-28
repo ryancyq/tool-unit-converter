@@ -1,7 +1,9 @@
 import { test, expect } from "@playwright/test";
+import { waitForHydration } from "./helpers";
 
 test("home page lists all tools", async ({ page }) => {
   await page.goto("/");
+  await waitForHydration(page);
   await expect(page).toHaveTitle(/Conversion Tools/);
 
   const tools = [

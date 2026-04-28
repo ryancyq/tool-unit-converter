@@ -1,9 +1,10 @@
 import { test, expect } from "@playwright/test";
+import { waitForHydration } from "./helpers";
 
 test.describe("Screen PPI calculator", () => {
   test.beforeEach(async ({ page }) => {
     await page.goto("/screen-ppi");
-    await page.waitForLoadState("networkidle");
+    await waitForHydration(page);
   });
 
   test("shows no result when inputs are empty", async ({ page }) => {
