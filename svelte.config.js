@@ -15,6 +15,9 @@ const config = {
     paths: {
       base: process.env.BASE_PATH ?? "",
     },
+    serviceWorker: {
+      register: false,
+    },
   },
 };
 

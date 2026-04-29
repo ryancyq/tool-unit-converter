@@ -1,17 +1,13 @@
 <script lang="ts">
   import "../app.css";
   import NavBar from "$lib/components/NavBar.svelte";
-  import UpdateBanner from "$lib/components/UpdateBanner.svelte";
   import { onMount } from "svelte";
   import { afterNavigate } from "$app/navigation";
-  import { initPWA } from "$lib/pwa";
   import { env } from "$env/dynamic/public";
 
   const GA_ID = env.PUBLIC_GA_MEASUREMENT_ID;
 
   onMount(() => {
-    initPWA();
-
     if (!GA_ID || navigator.doNotTrack === "1") return;
 
     const script = document.createElement("script");
@@ -38,4 +34,7 @@
 <main class="mx-auto max-w-5xl px-4 py-8">
   <slot />
 </main>
-<UpdateBanner />
+
+{#await import("$lib/components/ReloadPrompt.svelte") then { default: ReloadPrompt }}
+  <ReloadPrompt />
+{/await}

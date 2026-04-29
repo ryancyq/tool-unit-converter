@@ -11,7 +11,10 @@ export default defineConfig({
     sveltekit(),
     SvelteKitPWA({
       registerType: "prompt",
-      injectRegister: "script-defer",
+      injectRegister: null,
+      kit: {
+        adapterFallback: "404.html",
+      },
       manifest: {
         name: "Unit Conversion Tool",
         short_name: "Unit Converters",
@@ -26,24 +29,24 @@ export default defineConfig({
             src: "icons/icon-192.png",
             sizes: "192x192",
             type: "image/png",
+            purpose: "any",
           },
           {
             src: "icons/icon-512.png",
             sizes: "512x512",
             type: "image/png",
+            purpose: "any",
           },
           {
             src: "icons/icon-512.png",
             sizes: "512x512",
             type: "image/png",
-            purpose: "any maskable",
+            purpose: "maskable",
           },
         ],
       },
       workbox: {
-        globPatterns: ["**/*.{js,css,html,svg,png,ico,woff,woff2}"],
-        navigateFallback: base ? `${base}/` : "/",
-        navigateFallbackDenylist: [/^\/api\//],
+        globPatterns: ["**/*.{js,css,html,svg,png,ico,woff,woff2,webmanifest}"],
         clientsClaim: true,
       },
       devOptions: {
