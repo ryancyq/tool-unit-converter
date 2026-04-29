@@ -56,7 +56,10 @@
 
   <!-- mobile dropdown -->
   {#if mobileOpen}
-    <div class="border-t border-slate-700 px-4 py-2 sm:hidden">
+    <div
+      data-testid="mobile-menu"
+      class="border-t border-slate-700 px-4 py-2 sm:hidden"
+    >
       {#each links as link}
         <a
           href={link.href}

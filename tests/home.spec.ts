@@ -17,6 +17,8 @@ test("home page lists all tools", async ({ page }) => {
     "Screen PPI",
   ];
   for (const tool of tools) {
-    await expect(page.getByText(tool, { exact: false }).first()).toBeVisible();
+    await expect(
+      page.locator("main").getByText(tool, { exact: false }),
+    ).toBeVisible();
   }
 });
