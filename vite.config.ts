@@ -44,6 +44,7 @@ export default defineConfig({
         globPatterns: ["**/*.{js,css,html,svg,png,ico,woff,woff2}"],
         navigateFallback: base ? `${base}/` : "/",
         navigateFallbackDenylist: [/^\/api\//],
+        clientsClaim: true,
       },
       devOptions: {
         enabled: true,
