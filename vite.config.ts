@@ -19,8 +19,8 @@ export default defineConfig({
         theme_color: "#1e293b",
         background_color: "#0f172a",
         display: "standalone",
-        scope: base || "/",
-        start_url: base || "/",
+        scope: base ? `${base}/` : "/",
+        start_url: base ? `${base}/` : "/",
         icons: [
           {
             src: "icons/icon-192.png",
