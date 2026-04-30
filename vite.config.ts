@@ -16,7 +16,6 @@ export default defineConfig({
         serviceWorker: {
           register: false,
         },
-        adapterFallback: "404.html",
       },
       manifest: {
         name: "Unit Conversion Tool",
@@ -51,7 +50,7 @@ export default defineConfig({
       workbox: {
         globPatterns: ["**/*.{js,css,html,svg,png,ico,woff,woff2,webmanifest}"],
         clientsClaim: true,
-        additionalManifestEntries: [{ url: "404.html", revision: null }],
+        navigateFallback: "/",
       },
       devOptions: {
         enabled: true,
