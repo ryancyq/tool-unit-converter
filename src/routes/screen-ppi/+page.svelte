@@ -165,7 +165,7 @@
       Screen PPI Calculator
     </h2>
 
-    <div class="grid grid-cols-2 gap-x-4 gap-y-4">
+    <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
       <!-- row 1: diagonal (left) | preset (right) -->
       <div>
         <label
@@ -317,7 +317,7 @@
         {/if}
 
         <!-- megapixels / aspect ratio / dot pitch -->
-        <div class="grid grid-cols-3 gap-3">
+        <div class="grid grid-cols-2 gap-3 sm:grid-cols-3">
           <div
             class="rounded-lg border border-slate-700 bg-slate-800/40 px-4 py-3"
           >

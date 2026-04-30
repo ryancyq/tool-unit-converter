@@ -26,7 +26,7 @@
     </a>
 
     <!-- desktop links -->
-    <div class="hidden items-center gap-1 sm:flex">
+    <div class="hidden items-center gap-1 lg:flex">
       {#each links as link}
         <a
           href={link.href}
@@ -42,7 +42,7 @@
     <!-- hamburger (mobile only) -->
     <button
       class="ml-auto flex items-center justify-center rounded-lg p-1.5 text-slate-400
-             transition-colors hover:text-white sm:hidden"
+             transition-colors hover:text-white lg:hidden"
       aria-label="Toggle menu"
       on:click={() => (mobileOpen = !mobileOpen)}
     >
@@ -58,7 +58,7 @@
   {#if mobileOpen}
     <div
       data-testid="mobile-menu"
-      class="border-t border-slate-700 px-4 py-2 sm:hidden"
+      class="border-t border-slate-700 px-4 py-2 lg:hidden"
     >
       {#each links as link}
         <a
