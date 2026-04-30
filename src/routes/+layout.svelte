@@ -1,18 +1,19 @@
 <script lang="ts">
   import "../app.css";
+  import { pwaInfo } from "virtual:pwa-info";
   import NavBar from "$lib/components/NavBar.svelte";
   import { onMount } from "svelte";
   import { afterNavigate } from "$app/navigation";
-  import { env } from "$env/dynamic/public";
+  import { PUBLIC_GA_MEASUREMENT_ID } from "$env/static/public";
 
-  const GA_ID = env.PUBLIC_GA_MEASUREMENT_ID;
+  $: webManifestLink = pwaInfo ? pwaInfo.webManifest.linkTag : "";
 
   onMount(() => {
-    if (!GA_ID || navigator.doNotTrack === "1") return;
+    if (!PUBLIC_GA_MEASUREMENT_ID || navigator.doNotTrack === "1") return;
 
     const script = document.createElement("script");
     script.async = true;
-    script.src = `https://www.googletagmanager.com/gtag/js?id=${GA_ID}`;
+    script.src = `https://www.googletagmanager.com/gtag/js?id=${PUBLIC_GA_MEASUREMENT_ID}`;
     document.head.appendChild(script);
 
     window.dataLayer = window.dataLayer || [];
@@ -23,12 +24,16 @@
   });
 
   afterNavigate(({ to }) => {
-    if (!GA_ID || typeof window.gtag === "undefined") return;
-    window.gtag("config", GA_ID, {
+    if (!PUBLIC_GA_MEASUREMENT_ID || typeof window.gtag === "undefined") return;
+    window.gtag("config", PUBLIC_GA_MEASUREMENT_ID, {
       page_path: to?.url.pathname,
     });
   });
 </script>
+
+<svelte:head>
+  {@html webManifestLink}
+</svelte:head>
 
 <NavBar />
 <main class="mx-auto max-w-5xl px-4 py-8">

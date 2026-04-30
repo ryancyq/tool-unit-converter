@@ -7,12 +7,12 @@ export default defineConfig({
   retries: process.env.CI ? 2 : 0,
   reporter: "html",
   use: {
-    baseURL: process.env.CI ? "http://localhost:4173" : "http://localhost:5173",
+    baseURL: "http://localhost:4173",
     trace: "on-first-retry",
   },
   projects: [
     {
-      name: "chromium",
+      name: "desktop-chromium",
       use: { ...devices["Desktop Chrome"] },
     },
     {
@@ -21,8 +21,8 @@ export default defineConfig({
     },
   ],
   webServer: {
-    command: process.env.CI ? "npm run preview" : "npm run dev",
-    url: process.env.CI ? "http://localhost:4173" : "http://localhost:5173",
+    command: "npm run preview",
+    url: "http://localhost:4173",
     reuseExistingServer: !process.env.CI,
   },
 });
