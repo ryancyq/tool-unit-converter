@@ -3,6 +3,7 @@
   import { useRegisterSW } from "virtual:pwa-register/svelte";
 
   const SW_TS_STALE_10_MINS_MS = 10 * 60 * 1000;
+  const SW_INTERVAL_60_MINS_MS = 60 * 60 * 1000;
   const SW_TS = "unit-converter-pwa-sw-last-updated";
   let swVisibilityController: AbortController | undefined;
   let swIntervalId: ReturnType<typeof setInterval> | undefined;
@@ -39,7 +40,7 @@
     clearInterval(swIntervalId);
     swIntervalId = setInterval(
       () => checkForUpdate(swUrl, reg),
-      60 * 60 * 1000,
+      SW_INTERVAL_60_MINS_MS,
     );
   }
 
