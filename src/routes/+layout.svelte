@@ -4,7 +4,8 @@
   import NavBar from "$lib/components/NavBar.svelte";
   import { onMount } from "svelte";
   import { afterNavigate } from "$app/navigation";
-  import { PUBLIC_GA_MEASUREMENT_ID } from "$env/static/public";
+  import { env } from "$env/dynamic/public";
+  const PUBLIC_GA_MEASUREMENT_ID = env.PUBLIC_GA_MEASUREMENT_ID;
 
   $: webManifestLink = pwaInfo ? pwaInfo.webManifest.linkTag : "";
 
