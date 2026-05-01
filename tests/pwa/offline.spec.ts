@@ -70,7 +70,7 @@ test.describe("offline navigation", () => {
 
     await expect(page.locator("nav")).toBeVisible();
     await expect(page.getByText("404")).toBeVisible();
-    await expect(page.getByText("Not found")).toBeVisible();
+    await expect(page.getByText("This page doesn't exist.")).toBeVisible();
   });
 
   test("converter remains functional while offline", async ({
