@@ -2,8 +2,8 @@
   import { X } from "lucide-svelte";
   import { useRegisterSW } from "virtual:pwa-register/svelte";
 
-  const SW_STALE_10_MINS_MS = 10 * 60 * 1000;
-  const SW_TS_KEY = "unit-converter-pwa-sw-last-updated";
+  const SW_TS_STALE_10_MINS_MS = 10 * 60 * 1000;
+  const SW_TS = "unit-converter-pwa-sw-last-updated";
   let swVisibilityController: AbortController | undefined;
   let swIntervalId: ReturnType<typeof setInterval> | undefined;
 
@@ -19,12 +19,12 @@
           headers: { cache: "no-store", "cache-control": "no-cache" },
         });
         if (res?.status === 200) await reg.update();
-        localStorage.setItem(SW_TS_KEY, String(Date.now()));
+        localStorage.setItem(SW_TS, String(Date.now()));
       }
 
       function isStale() {
-        const ts = localStorage.getItem(SW_TS_KEY);
-        return !ts || Date.now() - Number(ts) >= SW_STALE_10_MINS_MS;
+        const ts = localStorage.getItem(SW_TS);
+        return !ts || Date.now() - Number(ts) >= SW_TS_STALE_10_MINS_MS;
       }
 
       if (isStale()) checkForUpdate();
