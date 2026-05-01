@@ -8,17 +8,18 @@
   const { needRefresh, updateServiceWorker } = useRegisterSW({
     onRegisteredSW(swUrl, registration) {
       if (!registration) return;
+      const reg = registration;
 
       const STALE_10_MINS_MS = 10 * 60 * 1000;
       const TS_KEY = "unit-converter-pwa-sw-last-updated";
 
       async function checkForUpdate() {
-        if (registration.installing || !navigator.onLine) return;
+        if (reg.installing || !navigator.onLine) return;
         const res = await fetch(swUrl, {
           cache: "no-store",
           headers: { cache: "no-store", "cache-control": "no-cache" },
         });
-        if (res?.status === 200) await registration.update();
+        if (res?.status === 200) await reg.update();
         localStorage.setItem(TS_KEY, String(Date.now()));
       }
 
@@ -33,7 +34,10 @@
       swVisibilityController = new AbortController();
       document.addEventListener(
         "visibilitychange",
-        () => { if (document.visibilityState === "visible" && isStale()) checkForUpdate(); },
+        () => {
+          if (document.visibilityState === "visible" && isStale())
+            checkForUpdate();
+        },
         { signal: swVisibilityController.signal },
       );
 
