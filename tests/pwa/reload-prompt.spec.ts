@@ -1,55 +1,51 @@
-import { test, expect, type Page } from "@playwright/test";
+import { test, expect } from "@playwright/test";
+import * as fs from "fs";
+import * as path from "path";
 import { waitForHydration, waitForServiceWorker } from "../helpers";
 
-async function setupSwUpdateRoute(page: Page) {
-  let swFetchCount = 0;
+// File-system writes must not race; run these tests serially in one worker.
+test.describe.configure({ mode: "serial" });
 
-  // log every network request/response that touches sw.js (including ones that
-  // may bypass the route handler, e.g. SW-infrastructure fetches)
-  page.context().on("request", (req) => {
-    if (req.url().includes("sw.js"))
-      console.log(
-        `[net:request]  ${req.resourceType().padEnd(12)} ${req.url()}`,
-      );
-  });
-  page.context().on("response", (res) => {
-    if (res.url().includes("sw.js"))
-      console.log(`[net:response] ${res.status()} ${res.url()}`);
-  });
+const SW_BUILD_PATH = path.join(process.cwd(), "build", "sw.js");
 
-  // capture browser-side console (ReloadPrompt logs + any SW errors)
-  page.on("console", (msg) =>
-    console.log(`[browser:${msg.type()}] ${msg.text()}`),
-  );
-  page.on("pageerror", (err) => console.log(`[page:error] ${err.message}`));
-
-  await page.context().route("**/sw.js", async (route) => {
-    swFetchCount++;
-    const url = route.request().url();
-    const type = route.request().resourceType();
-    if (swFetchCount === 1) {
-      console.log(`[route] #${swFetchCount} PASS-THROUGH (${type}) ${url}`);
-      return route.continue();
-    }
-    console.log(`[route] #${swFetchCount} MODIFIED   (${type}) ${url}`);
-    const response = await route.fetch();
-    const body = await response.text();
-    await route.fulfill({
-      status: 200,
-      contentType: "application/javascript",
-      body: body + "\n",
-    });
-  });
-}
+// Key used by ReloadPrompt.svelte to decide whether to call reg.update() on load.
+// Pre-setting it prevents the automatic check from racing with our explicit one.
+const SW_TS_KEY = "unit-converter-pwa-sw-last-updated";
 
 test.describe("reload prompt", () => {
+  let originalSwContent: string;
+
+  test.beforeEach(async ({ page }) => {
+    originalSwContent = fs.readFileSync(SW_BUILD_PATH, "utf-8");
+
+    // Suppress the automatic checkForUpdate call that fires on first load
+    // so that reg.update() only runs when we explicitly trigger it.
+    await page.addInitScript(
+      ({ key }) => {
+        localStorage.setItem(key, String(Date.now()));
+      },
+      { key: SW_TS_KEY },
+    );
+  });
+
+  test.afterEach(() => {
+    fs.writeFileSync(SW_BUILD_PATH, originalSwContent);
+  });
+
   test("shows update notification when a new version is available", async ({
     page,
   }) => {
-    await setupSwUpdateRoute(page);
     await page.goto("/");
     await waitForHydration(page);
     await waitForServiceWorker(page);
+
+    // Write a byte-different sw.js to disk so the browser detects a new version.
+    // registration.update() always fetches with cache:"no-store", so it reads
+    // the file fresh; the preview server has no in-memory cache.
+    fs.writeFileSync(SW_BUILD_PATH, originalSwContent + "\n");
+    await page.evaluate(() =>
+      navigator.serviceWorker.getRegistration().then((reg) => reg?.update()),
+    );
 
     await expect(page.getByRole("alert")).toBeVisible({ timeout: 15000 });
     await expect(page.getByRole("alert")).toContainText(
@@ -58,10 +54,14 @@ test.describe("reload prompt", () => {
   });
 
   test("dismiss button hides the update notification", async ({ page }) => {
-    await setupSwUpdateRoute(page);
     await page.goto("/");
     await waitForHydration(page);
     await waitForServiceWorker(page);
+
+    fs.writeFileSync(SW_BUILD_PATH, originalSwContent + "\n");
+    await page.evaluate(() =>
+      navigator.serviceWorker.getRegistration().then((reg) => reg?.update()),
+    );
 
     await expect(page.getByRole("alert")).toBeVisible({ timeout: 15000 });
     await page.getByRole("button", { name: "Dismiss" }).click();
