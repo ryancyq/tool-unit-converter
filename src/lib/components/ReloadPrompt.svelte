@@ -7,41 +7,45 @@
   let swVisibilityController: AbortController | undefined;
   let swIntervalId: ReturnType<typeof setInterval> | undefined;
 
+  function isStale() {
+    const ts = localStorage.getItem(SW_TS);
+    return !ts || Date.now() - Number(ts) >= SW_TS_STALE_10_MINS_MS;
+  }
+
+  async function checkForUpdate(swUrl: string, reg: ServiceWorkerRegistration) {
+    if (reg.installing || !navigator.onLine) return;
+    const res = await fetch(swUrl, {
+      cache: "no-store",
+      headers: { cache: "no-store", "cache-control": "no-cache" },
+    });
+    if (res?.status === 200) await reg.update();
+    localStorage.setItem(SW_TS, String(Date.now()));
+  }
+
+  function loadSW(swUrl: string, reg: ServiceWorkerRegistration) {
+    if (isStale()) checkForUpdate(swUrl, reg);
+
+    swVisibilityController?.abort();
+    swVisibilityController = new AbortController();
+    document.addEventListener(
+      "visibilitychange",
+      () => {
+        if (document.visibilityState === "visible" && isStale())
+          checkForUpdate(swUrl, reg);
+      },
+      { signal: swVisibilityController.signal },
+    );
+
+    clearInterval(swIntervalId);
+    swIntervalId = setInterval(
+      () => checkForUpdate(swUrl, reg),
+      60 * 60 * 1000,
+    );
+  }
+
   const { needRefresh, updateServiceWorker } = useRegisterSW({
     onRegisteredSW(swUrl, registration) {
-      if (!registration) return;
-      const reg = registration;
-
-      async function checkForUpdate() {
-        if (reg.installing || !navigator.onLine) return;
-        const res = await fetch(swUrl, {
-          cache: "no-store",
-          headers: { cache: "no-store", "cache-control": "no-cache" },
-        });
-        if (res?.status === 200) await reg.update();
-        localStorage.setItem(SW_TS, String(Date.now()));
-      }
-
-      function isStale() {
-        const ts = localStorage.getItem(SW_TS);
-        return !ts || Date.now() - Number(ts) >= SW_TS_STALE_10_MINS_MS;
-      }
-
-      if (isStale()) checkForUpdate();
-
-      swVisibilityController?.abort();
-      swVisibilityController = new AbortController();
-      document.addEventListener(
-        "visibilitychange",
-        () => {
-          if (document.visibilityState === "visible" && isStale())
-            checkForUpdate();
-        },
-        { signal: swVisibilityController.signal },
-      );
-
-      clearInterval(swIntervalId);
-      swIntervalId = setInterval(checkForUpdate, 60 * 60 * 1000);
+      if (registration) loadSW(swUrl, registration);
     },
   });
 
