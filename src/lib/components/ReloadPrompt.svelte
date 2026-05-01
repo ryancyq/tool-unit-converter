@@ -2,50 +2,75 @@
   import { X } from "lucide-svelte";
   import { useRegisterSW } from "virtual:pwa-register/svelte";
 
-  const { needRefresh, offlineReady, updateServiceWorker } = useRegisterSW({
+  const SW_TS_STALE_10_MINS_MS = 10 * 60 * 1000;
+  const SW_INTERVAL_60_MINS_MS = 60 * 60 * 1000;
+  const SW_TS = "unit-converter-pwa-sw-last-updated";
+  
+  let swVisibilityController: AbortController | undefined;
+  let swIntervalId: ReturnType<typeof setInterval> | undefined;
+
+  function isStale() {
+    const ts = localStorage.getItem(SW_TS);
+    return !ts || Date.now() - Number(ts) >= SW_TS_STALE_10_MINS_MS;
+  }
+
+  async function checkForUpdate(swUrl: string, reg: ServiceWorkerRegistration) {
+    if (reg.installing || !navigator.onLine) return;
+    const res = await fetch(swUrl, {
+      cache: "no-store",
+      headers: { cache: "no-store", "cache-control": "no-cache" },
+    });
+    if (res?.status === 200) await reg.update();
+    localStorage.setItem(SW_TS, String(Date.now()));
+  }
+
+  function loadSW(swUrl: string, reg: ServiceWorkerRegistration) {
+    if (isStale()) checkForUpdate(swUrl, reg);
+
+    swVisibilityController?.abort();
+    swVisibilityController = new AbortController();
+    document.addEventListener(
+      "visibilitychange",
+      () => {
+        if (document.visibilityState === "visible" && isStale())
+          checkForUpdate(swUrl, reg);
+      },
+      { signal: swVisibilityController.signal },
+    );
+
+    clearInterval(swIntervalId);
+    swIntervalId = setInterval(
+      () => checkForUpdate(swUrl, reg),
+      SW_INTERVAL_60_MINS_MS,
+    );
+  }
+
+  const { needRefresh, updateServiceWorker } = useRegisterSW({
     onRegisteredSW(swUrl, registration) {
-      if (!registration) return;
-      setInterval(
-        async () => {
-          if (registration.installing) return;
-          if ("connection" in navigator && !navigator.onLine) return;
-          const response = await fetch(swUrl, {
-            cache: "no-store",
-            headers: { cache: "no-store", "cache-control": "no-cache" },
-          });
-          if (response?.status === 200) await registration.update();
-        },
-        60 * 60 * 1000,
-      );
+      if (registration) loadSW(swUrl, registration);
     },
   });
 
-  const dismiss = () => {
-    offlineReady.set(false);
-    needRefresh.set(false);
-  };
+  const dismiss = () => needRefresh.set(false);
 </script>
 
-{#if $offlineReady || $needRefresh}
+{#if $needRefresh}
   <div
-    class="fixed bottom-4 left-1/2 z-50 flex -translate-x-1/2 items-center gap-4 rounded-xl
-           bg-sky-700 px-5 py-3 shadow-2xl"
+    class="fixed bottom-4 left-4 right-4 z-50 flex items-center gap-2 rounded-xl
+           bg-sky-700 px-4 py-3 shadow-2xl
+           sm:left-1/2 sm:right-auto sm:-translate-x-1/2 sm:gap-4 sm:px-5"
     role="alert"
   >
-    {#if $offlineReady}
-      <span class="text-sm text-white">App ready to work offline.</span>
-    {:else}
-      <span class="text-sm text-white">A new version is available.</span>
-      <button
-        class="rounded-lg bg-white px-3 py-1 text-sm font-semibold text-sky-700
-               transition-colors hover:bg-sky-100"
-        onclick={() => updateServiceWorker(true)}
-      >
-        Update
-      </button>
-    {/if}
+    <span class="flex-1 text-sm whitespace-nowrap text-white">A new version is available.</span>
     <button
-      class="text-sky-200 hover:text-white"
+      class="shrink-0 rounded-lg bg-white px-3 py-1 text-sm font-semibold text-sky-700
+             transition-colors hover:bg-sky-100"
+      onclick={() => updateServiceWorker(true)}
+    >
+      Update
+    </button>
+    <button
+      class="shrink-0 text-sky-200 hover:text-white"
       aria-label="Dismiss"
       onclick={dismiss}
     >
