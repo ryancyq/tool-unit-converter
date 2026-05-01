@@ -12,11 +12,6 @@ export default defineConfig({
     SvelteKitPWA({
       registerType: "prompt",
       injectRegister: null,
-      kit: {
-        serviceWorker: {
-          register: false,
-        },
-      },
       manifest: {
         name: "Unit Conversion Tool",
         short_name: "Unit Converters",
