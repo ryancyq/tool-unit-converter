@@ -14,11 +14,25 @@
   }
 
   async function checkForUpdate(swUrl: string, reg: ServiceWorkerRegistration) {
+    console.log(
+      "[ReloadPrompt] checkForUpdate swUrl:",
+      swUrl,
+      "installing:",
+      !!reg.installing,
+      "onLine:",
+      navigator.onLine,
+    );
     if (reg.installing || !navigator.onLine) return;
     const res = await fetch(swUrl, {
       cache: "no-store",
       headers: { cache: "no-store", "cache-control": "no-cache" },
     });
+    console.log(
+      "[ReloadPrompt] fetch status:",
+      res?.status,
+      "calling reg.update():",
+      res?.status === 200,
+    );
     if (res?.status === 200) await reg.update();
     localStorage.setItem(SW_TS, String(Date.now()));
   }
