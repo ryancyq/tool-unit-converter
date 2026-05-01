@@ -50,10 +50,6 @@
     },
   });
 
-  // test hook: allows E2E tests to set needRefresh without relying on SW update internals
-  if (typeof window !== "undefined")
-    (window as any).__setNeedRefresh = (v: boolean) => needRefresh.set(v);
-
   const dismiss = () => needRefresh.set(false);
 </script>
 
