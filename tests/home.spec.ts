@@ -4,7 +4,7 @@ import { waitForHydration } from "./helpers";
 test("home page lists all tools", async ({ page }) => {
   await page.goto("/");
   await waitForHydration(page);
-  await expect(page).toHaveTitle(/Unit Conversion Tool/);
+  await expect(page).toHaveTitle(/Kaeru°/);
 
   const tools = [
     "Length",

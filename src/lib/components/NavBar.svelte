@@ -66,7 +66,7 @@
     <!-- tool icon + name (display only, non-navigable) -->
     <div class="flex flex-shrink-0 items-center gap-2 font-bold text-sky-400">
       <NavIcon size={18} />
-      <span>{toolName ?? "Unit Conversion Tool"}</span>
+      <span>{toolName ?? "Kaeru°"}</span>
     </div>
 
     <!-- right side: offline status + gear -->
