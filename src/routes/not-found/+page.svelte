@@ -1,9 +1,10 @@
 <script lang="ts">
   import { base } from "$app/paths";
+  import { APP_NAME } from "$lib/config";
 </script>
 
 <svelte:head>
-  <title>Page Not Found · Conversion Tools</title>
+  <title>Page Not Found · {APP_NAME}</title>
 </svelte:head>
 
 <div class="space-y-4 text-center">
