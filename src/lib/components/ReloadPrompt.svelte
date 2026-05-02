@@ -1,55 +1,68 @@
 <script lang="ts">
-  import { X } from "lucide-svelte";
+  import { LoaderCircle, X } from "lucide-svelte";
   import { useRegisterSW } from "virtual:pwa-register/svelte";
 
   const SW_TS_STALE_10_MINS_MS = 10 * 60 * 1000;
   const SW_INTERVAL_60_MINS_MS = 60 * 60 * 1000;
   const SW_TS = "unit-converter-pwa-sw-last-updated";
-  
+
   let swVisibilityController: AbortController | undefined;
   let swIntervalId: ReturnType<typeof setInterval> | undefined;
 
-  function isStale() {
+  const isStale = () => {
     const ts = localStorage.getItem(SW_TS);
     return !ts || Date.now() - Number(ts) >= SW_TS_STALE_10_MINS_MS;
-  }
+  };
 
-  async function checkForUpdate(swUrl: string, reg: ServiceWorkerRegistration) {
-    if (reg.installing || !navigator.onLine) return;
+  const loadSW = async (swUrl: string, reg: ServiceWorkerRegistration) => {
+    if (reg.installing || !navigator) return;
+    if ("connection" in navigator && !navigator.onLine) return;
+
+    localStorage.setItem(SW_TS, String(Date.now()));
+
     const res = await fetch(swUrl, {
       cache: "no-store",
       headers: { cache: "no-store", "cache-control": "no-cache" },
     });
+
     if (res?.status === 200) await reg.update();
-    localStorage.setItem(SW_TS, String(Date.now()));
-  }
+  };
 
-  function loadSW(swUrl: string, reg: ServiceWorkerRegistration) {
-    if (isStale()) checkForUpdate(swUrl, reg);
-
-    swVisibilityController?.abort();
-    swVisibilityController = new AbortController();
-    document.addEventListener(
-      "visibilitychange",
-      () => {
-        if (document.visibilityState === "visible" && isStale())
-          checkForUpdate(swUrl, reg);
-      },
-      { signal: swVisibilityController.signal },
-    );
-
-    clearInterval(swIntervalId);
-    swIntervalId = setInterval(
-      () => checkForUpdate(swUrl, reg),
-      SW_INTERVAL_60_MINS_MS,
-    );
-  }
+  const checkForUpdate = (swUrl: string, reg: ServiceWorkerRegistration) => {
+    if (isStale()) loadSW(swUrl, reg);
+  };
 
   const { needRefresh, updateServiceWorker } = useRegisterSW({
     onRegisteredSW(swUrl, registration) {
-      if (registration) loadSW(swUrl, registration);
+      if (registration) {
+        swVisibilityController?.abort();
+        swVisibilityController = new AbortController();
+        document.addEventListener(
+          "visibilitychange",
+          () => {
+            if (document.visibilityState === "visible") {
+              checkForUpdate(swUrl, registration);
+            }
+          },
+          { signal: swVisibilityController.signal },
+        );
+
+        clearInterval(swIntervalId);
+        swIntervalId = setInterval(
+          () => checkForUpdate(swUrl, registration),
+          SW_INTERVAL_60_MINS_MS,
+        );
+
+        checkForUpdate(swUrl, registration);
+      }
     },
   });
+
+  let updating = $state(false);
+  const update = () => {
+    updating = true;
+    updateServiceWorker(true);
+  };
 
   const dismiss = () => needRefresh.set(false);
 </script>
@@ -61,12 +74,19 @@
            sm:left-1/2 sm:right-auto sm:-translate-x-1/2 sm:gap-4 sm:px-5"
     role="alert"
   >
-    <span class="flex-1 text-sm whitespace-nowrap text-white">A new version is available.</span>
+    <span class="flex-1 text-sm whitespace-nowrap text-white"
+      >A new version is available.
+    </span>
     <button
-      class="shrink-0 rounded-lg bg-white px-3 py-1 text-sm font-semibold text-sky-700
-             transition-colors hover:bg-sky-100"
-      onclick={() => updateServiceWorker(true)}
+      class="shrink-0 inline-flex items-center gap-1.5 rounded-lg bg-white px-3 py-1
+             text-sm font-semibold text-sky-700 transition-colors hover:bg-sky-100
+             disabled:opacity-60 disabled:cursor-not-allowed"
+      onclick={update}
+      disabled={updating}
     >
+      {#if updating}
+        <LoaderCircle class="size-3.5 animate-spin" aria-hidden="true" />
+      {/if}
       Update
     </button>
     <button
