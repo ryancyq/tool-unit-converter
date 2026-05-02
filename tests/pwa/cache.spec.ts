@@ -38,6 +38,9 @@ test.describe("precache", () => {
       "speed",
       "data",
       "screen-ppi",
+      "settings",
+      "tos",
+      "not-found",
     ];
 
     for (const url of pages) {

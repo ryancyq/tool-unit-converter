@@ -1,4 +1,5 @@
 import { test, expect } from "@playwright/test";
+import { APP_NAME } from "../../src/lib/config";
 
 test.describe("web app manifest", () => {
   test("is linked in the document head", async ({ page }) => {
@@ -20,8 +21,8 @@ test.describe("web app manifest", () => {
     const response = await page.request.get("/manifest.webmanifest");
     const manifest = await response.json();
 
-    expect(manifest.name).toBeTruthy();
-    expect(manifest.short_name).toBeTruthy();
+    expect(manifest.name).toBe(APP_NAME);
+    expect(manifest.short_name).toBe(APP_NAME);
     expect(manifest.description).toBeTruthy();
     expect(manifest.theme_color).toBeTruthy();
     expect(manifest.display).toBe("standalone");

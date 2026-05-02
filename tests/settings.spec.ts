@@ -42,6 +42,13 @@ test.describe("settings page", () => {
     );
   });
 
+  test("terms of service link navigates to /tos", async ({ page }) => {
+    await page.goto("/settings");
+    await waitForHydration(page);
+    await page.getByRole("link", { name: "Terms of Service" }).click();
+    await expect(page).toHaveURL("/tos");
+  });
+
   test("unit system change is written to localStorage under STORAGE_KEY", async ({
     page,
   }) => {

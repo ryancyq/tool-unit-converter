@@ -46,7 +46,7 @@ test.describe("offline navigation", () => {
     await context.setOffline(true);
     await page.reload();
 
-    await expect(page).toHaveTitle(/Unit Conversion Tool/);
+    await expect(page).toHaveTitle(/Kaeru°/);
   });
 
   test("converter pages are accessible offline after first visit", async ({
