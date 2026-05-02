@@ -1,18 +1,21 @@
 import { writable } from "svelte/store";
 import { browser } from "$app/environment";
+import { STORAGE_KEY } from "$lib/config";
+
+export { APP_NAME } from "$lib/config";
 
 export type UnitSystem = "default" | "imperial" | "metric";
 
 export type Settings = {
   unitSystem: UnitSystem;
   offlineEnabled: boolean | null;
+  swLastChecked: number | null;
 };
-
-const STORAGE_KEY = "unit-converter-settings";
 
 const defaults: Settings = {
   unitSystem: "default",
   offlineEnabled: null,
+  swLastChecked: null,
 };
 
 function createSettingsStore() {
@@ -43,6 +46,13 @@ function createSettingsStore() {
     setOfflineEnabled(enabled: boolean) {
       update((s) => {
         const next = { ...s, offlineEnabled: enabled };
+        persist(next);
+        return next;
+      });
+    },
+    onServiceWorkerUpdated(timestamp: number = Date.now()) {
+      update((s) => {
+        const next = { ...s, swLastChecked: timestamp };
         persist(next);
         return next;
       });

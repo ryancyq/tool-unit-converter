@@ -1,14 +1,15 @@
 import type { Page } from "@playwright/test";
+import { STORAGE_KEY } from "../src/lib/config";
 
 // Seeds localStorage with offline consent before the next page.goto() call.
 // Must be called before page.goto() — addInitScript runs at page initialization.
 export async function seedOfflineConsent(page: Page) {
-  await page.addInitScript(() => {
+  await page.addInitScript((key) => {
     localStorage.setItem(
-      "unit-converter-settings",
+      key,
       JSON.stringify({ unitSystem: "default", offlineEnabled: true }),
     );
-  });
+  }, STORAGE_KEY);
 }
 
 export async function waitForHydration(page: Page) {

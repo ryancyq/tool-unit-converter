@@ -2,6 +2,7 @@ import tailwindcss from "@tailwindcss/vite";
 import { sveltekit } from "@sveltejs/kit/vite";
 import { SvelteKitPWA } from "@vite-pwa/sveltekit";
 import { defineConfig } from "vite";
+import { APP_NAME } from "./src/lib/config";
 
 const base = process.env.BASE_PATH ?? "";
 
@@ -13,8 +14,8 @@ export default defineConfig({
       registerType: "prompt",
       injectRegister: null,
       manifest: {
-        name: "Kaeru°",
-        short_name: "Kaeru°",
+        name: APP_NAME,
+        short_name: APP_NAME,
         description: "Hop between units — works offline",
         theme_color: "#1e293b",
         background_color: "#0f172a",

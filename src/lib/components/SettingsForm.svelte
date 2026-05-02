@@ -1,6 +1,5 @@
 <script lang="ts">
-  import { settings } from "$lib/stores/settings";
-  import type { UnitSystem } from "$lib/stores/settings";
+  import { settings, type UnitSystem } from "$lib/stores/settings";
 
   interface Props {
     compact?: boolean;

@@ -1,24 +1,25 @@
 <script lang="ts">
+  import { get } from "svelte/store";
   import { LoaderCircle, X } from "lucide-svelte";
   import { useRegisterSW } from "virtual:pwa-register/svelte";
+  import { settings } from "$lib/stores/settings";
 
-  const SW_TS_STALE_10_MINS_MS = 10 * 60 * 1000;
+  const SW_STALE_10_MINS_MS = 10 * 60 * 1000;
   const SW_INTERVAL_60_MINS_MS = 60 * 60 * 1000;
-  const SW_TS = "unit-converter-pwa-sw-last-updated";
 
   let swVisibilityController: AbortController | undefined;
   let swIntervalId: ReturnType<typeof setInterval> | undefined;
 
   const isStale = () => {
-    const ts = localStorage.getItem(SW_TS);
-    return !ts || Date.now() - Number(ts) >= SW_TS_STALE_10_MINS_MS;
+    const ts = get(settings).swLastChecked;
+    return !ts || Date.now() - ts >= SW_STALE_10_MINS_MS;
   };
 
   const loadSW = async (swUrl: string, reg: ServiceWorkerRegistration) => {
     if (reg.installing || !navigator) return;
     if ("connection" in navigator && !navigator.onLine) return;
 
-    localStorage.setItem(SW_TS, String(Date.now()));
+    settings.onServiceWorkerUpdated(Date.now());
 
     const res = await fetch(swUrl, {
       cache: "no-store",

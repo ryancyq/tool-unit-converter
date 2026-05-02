@@ -1,5 +1,6 @@
 import { test, expect } from "@playwright/test";
 import { waitForHydration } from "./helpers";
+import { STORAGE_KEY } from "../src/lib/config";
 
 test.describe("settings page", () => {
   test("renders unit system options and offline toggle", async ({ page }) => {
@@ -39,6 +40,20 @@ test.describe("settings page", () => {
     await expect(page.getByRole("button", { name: "Metric / SI" })).toHaveClass(
       /border-sky-600/,
     );
+  });
+
+  test("unit system change is written to localStorage under STORAGE_KEY", async ({
+    page,
+  }) => {
+    await page.goto("/settings");
+    await waitForHydration(page);
+    await page.getByRole("button", { name: "Imperial" }).click();
+    const raw = await page.evaluate(
+      (key) => localStorage.getItem(key),
+      STORAGE_KEY,
+    );
+    expect(raw).not.toBeNull();
+    expect(JSON.parse(raw!)).toMatchObject({ unitSystem: "imperial" });
   });
 });
 

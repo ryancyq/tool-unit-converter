@@ -13,7 +13,7 @@
     X,
   } from "lucide-svelte";
   import { getTools } from "$lib/tools";
-  import { settings } from "$lib/stores/settings";
+  import { settings, APP_NAME } from "$lib/stores/settings";
   import SettingsDropdown from "./SettingsDropdown.svelte";
 
   const tools = getTools();
@@ -66,7 +66,7 @@
     <!-- tool icon + name (display only, non-navigable) -->
     <div class="flex flex-shrink-0 items-center gap-2 font-bold text-sky-400">
       <NavIcon size={18} />
-      <span>{toolName ?? "Kaeru°"}</span>
+      <span>{toolName ?? APP_NAME}</span>
     </div>
 
     <!-- right side: offline status + gear -->
