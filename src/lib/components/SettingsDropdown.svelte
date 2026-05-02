@@ -30,6 +30,7 @@
 
 <div
   bind:this={container}
+  data-testid="settings-dropdown"
   class="absolute right-0 top-full z-50 mt-2 w-64 rounded-xl border border-slate-700 bg-surface-card p-4 shadow-2xl"
 >
   <div class="space-y-4">

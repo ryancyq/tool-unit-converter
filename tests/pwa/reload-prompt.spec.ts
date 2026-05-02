@@ -1,7 +1,11 @@
 import { test, expect, type Page } from "@playwright/test";
 import * as fs from "fs";
 import * as path from "path";
-import { waitForHydration, waitForServiceWorker } from "../helpers";
+import {
+  waitForHydration,
+  waitForServiceWorker,
+  seedOfflineConsent,
+} from "../helpers";
 
 // .svelte-kit/output is the build output for `npm run preview` (vite preview serves from here),
 // whereas `npm run build` writes to the `build/` directory used for production deployment.
@@ -31,6 +35,7 @@ test.describe("reload prompt", () => {
 
   test.beforeEach(async ({ page }) => {
     originalSwContent = fs.readFileSync(SW_BUILD_PATH, "utf-8");
+    await seedOfflineConsent(page);
   });
 
   test.afterEach(() => {

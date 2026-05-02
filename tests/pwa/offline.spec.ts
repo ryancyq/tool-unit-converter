@@ -1,5 +1,13 @@
 import { test, expect } from "@playwright/test";
-import { waitForHydration, waitForServiceWorker } from "../helpers";
+import {
+  waitForHydration,
+  waitForServiceWorker,
+  seedOfflineConsent,
+} from "../helpers";
+
+test.beforeEach(async ({ page }) => {
+  await seedOfflineConsent(page);
+});
 
 test.describe("service worker", () => {
   test("registers and reaches activated state", async ({ page }) => {
@@ -38,7 +46,7 @@ test.describe("offline navigation", () => {
     await context.setOffline(true);
     await page.reload();
 
-    await expect(page).toHaveTitle(/Conversion Tools/);
+    await expect(page).toHaveTitle(/Unit Conversion Tool/);
   });
 
   test("converter pages are accessible offline after first visit", async ({

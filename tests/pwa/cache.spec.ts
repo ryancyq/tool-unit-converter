@@ -1,5 +1,13 @@
 import { test, expect, type Page } from "@playwright/test";
-import { waitForHydration, waitForServiceWorker } from "../helpers";
+import {
+  waitForHydration,
+  waitForServiceWorker,
+  seedOfflineConsent,
+} from "../helpers";
+
+test.beforeEach(async ({ page }) => {
+  await seedOfflineConsent(page);
+});
 
 async function isCached(page: Page, url: string): Promise<boolean> {
   return page.evaluate(async (u) => {

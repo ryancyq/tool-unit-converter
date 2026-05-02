@@ -1,7 +1,7 @@
 import { test, expect } from "@playwright/test";
 import { waitForHydration } from "./helpers";
 
-const navLinks = [
+const toolLabels = [
   "Length",
   "Weight",
   "Temperature",
@@ -12,55 +12,112 @@ const navLinks = [
   "Screen PPI",
 ];
 
-test.describe("mobile nav", () => {
-  test.use({ viewport: { width: 390, height: 844 } });
-
-  test("hamburger button is visible, mobile menu is hidden", async ({
+test.describe("hamburger menu", () => {
+  test("toggle button is visible and menu is initially hidden", async ({
     page,
   }) => {
     await page.goto("/");
     await expect(
       page.getByRole("button", { name: "Toggle menu" }),
     ).toBeVisible();
-    await expect(page.getByTestId("mobile-menu")).not.toBeAttached();
+    await expect(page.getByTestId("nav-menu")).not.toBeAttached();
   });
 
-  test("opens and closes menu on toggle", async ({ page }) => {
+  test("opens and closes on toggle", async ({ page }) => {
     await page.goto("/");
     await waitForHydration(page);
     const toggle = page.getByRole("button", { name: "Toggle menu" });
     await toggle.click();
-    await expect(page.getByTestId("mobile-menu")).toBeVisible();
+    await expect(page.getByTestId("nav-menu")).toBeVisible();
     await toggle.click();
-    await expect(page.getByTestId("mobile-menu")).not.toBeAttached();
+    await expect(page.getByTestId("nav-menu")).not.toBeAttached();
   });
 
-  test("closes menu when a link is clicked", async ({ page }) => {
+  test("menu contains Home and all tool links", async ({ page }) => {
+    await page.goto("/");
+    await waitForHydration(page);
+    await page.getByRole("button", { name: "Toggle menu" }).click();
+    const menu = page.getByTestId("nav-menu");
+    await expect(menu.getByRole("link", { name: "Home" })).toBeVisible();
+    for (const label of toolLabels) {
+      await expect(
+        menu.getByRole("link", { name: label, exact: true }),
+      ).toBeVisible();
+    }
+  });
+
+  test("closes when a tool link is clicked", async ({ page }) => {
     await page.goto("/");
     await waitForHydration(page);
     await page.getByRole("button", { name: "Toggle menu" }).click();
     await page
-      .getByTestId("mobile-menu")
+      .getByTestId("nav-menu")
       .getByRole("link", { name: "Length" })
       .click();
-    await expect(page.getByTestId("mobile-menu")).not.toBeAttached();
+    await expect(page.getByTestId("nav-menu")).not.toBeAttached();
   });
 });
 
 test.describe("desktop nav", () => {
-  test.use({ viewport: { width: 1280, height: 800 } });
+  test.skip(({ isMobile }) => isMobile, "desktop only");
 
-  test("nav links are visible, hamburger button is hidden", async ({
-    page,
-  }) => {
+  test("hamburger toggle button is visible", async ({ page }) => {
     await page.goto("/");
     await expect(
       page.getByRole("button", { name: "Toggle menu" }),
-    ).toBeHidden();
-    for (const label of navLinks) {
+    ).toBeVisible();
+  });
+
+  test("tool links are in the hamburger menu, not directly in the navbar", async ({
+    page,
+  }) => {
+    await page.goto("/");
+    await waitForHydration(page);
+    for (const label of toolLabels) {
       await expect(
         page.locator("nav").getByRole("link", { name: label, exact: true }),
-      ).toBeVisible();
+      ).not.toBeVisible();
     }
+    await page.getByRole("button", { name: "Toggle menu" }).click();
+    await expect(
+      page.getByTestId("nav-menu").getByRole("link", { name: "Length" }),
+    ).toBeVisible();
+  });
+
+  test("settings gear button opens the settings dropdown", async ({ page }) => {
+    await page.goto("/");
+    await waitForHydration(page);
+    await expect(page.getByTestId("settings-dropdown")).not.toBeAttached();
+    await page.getByRole("button", { name: "Settings" }).click();
+    await expect(page.getByTestId("settings-dropdown")).toBeVisible();
+  });
+
+  test("settings dropdown closes on Escape", async ({ page }) => {
+    await page.goto("/");
+    await waitForHydration(page);
+    await page.getByRole("button", { name: "Settings" }).click();
+    await expect(page.getByTestId("settings-dropdown")).toBeVisible();
+    await page.keyboard.press("Escape");
+    await expect(page.getByTestId("settings-dropdown")).not.toBeAttached();
+  });
+
+  test("settings dropdown closes when clicking outside", async ({ page }) => {
+    await page.goto("/");
+    await waitForHydration(page);
+    await page.getByRole("button", { name: "Settings" }).click();
+    await expect(page.getByTestId("settings-dropdown")).toBeVisible();
+    await page.mouse.click(100, 400);
+    await expect(page.getByTestId("settings-dropdown")).not.toBeAttached();
+  });
+});
+
+test.describe("mobile nav", () => {
+  test.skip(({ isMobile }) => !isMobile, "mobile only");
+
+  test("settings icon navigates to the settings page", async ({ page }) => {
+    await page.goto("/");
+    await waitForHydration(page);
+    await page.getByRole("link", { name: "Settings" }).click();
+    await expect(page).toHaveURL("/settings");
   });
 });
