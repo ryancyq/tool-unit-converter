@@ -18,7 +18,7 @@ test("home page lists all tools", async ({ page }) => {
   ];
   for (const tool of tools) {
     await expect(
-      page.locator("main").getByText(tool, { exact: false }),
+      page.locator("main").getByRole("link", { name: tool, exact: false }),
     ).toBeVisible();
   }
 });

@@ -106,7 +106,7 @@ test.describe("desktop nav", () => {
     await waitForHydration(page);
     await page.getByRole("button", { name: "Settings" }).click();
     await expect(page.getByTestId("settings-dropdown")).toBeVisible();
-    await page.mouse.click(100, 400);
+    await page.locator("main").click();
     await expect(page.getByTestId("settings-dropdown")).not.toBeAttached();
   });
 });

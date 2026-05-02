@@ -4,7 +4,7 @@ import { APP_NAME } from "../src/lib/config";
 
 test.describe("not found page", () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto("/this-route-does-not-exist");
+    await page.goto("/not-found");
     await waitForHydration(page);
   });
 

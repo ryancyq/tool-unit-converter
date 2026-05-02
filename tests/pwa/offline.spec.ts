@@ -94,6 +94,7 @@ test.describe("offline navigation", () => {
     await waitForHydration(page);
 
     await page.fill("#value-input", "1");
-    await expect(page.locator("#result-output")).toContainText("3.28084");
+    await expect(page.locator("#result-output")).toContainText("1,000");
+    await expect(page.locator("#result-output")).toContainText("m");
   });
 });
