@@ -1,6 +1,4 @@
 <script lang="ts">
-  import { Monitor } from "lucide-svelte";
-
   type Preset = { label: string; w: number; h: number; diag?: number };
   type PresetGroup = { group: string; presets: Preset[] };
 
@@ -159,12 +157,7 @@
 </svelte:head>
 
 <div class="space-y-4">
-  <div class="card space-y-6">
-    <h2 class="flex items-center gap-2 text-xl font-semibold text-sky-400">
-      <Monitor size={22} />
-      Screen PPI Calculator
-    </h2>
-
+  <div class="space-y-6">
     <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
       <!-- row 1: diagonal (left) | preset (right) -->
       <div>

@@ -2,28 +2,61 @@
   import { ArrowLeftRight, ArrowUpDown, Calculator } from "lucide-svelte";
   import type { ComponentType } from "svelte";
   import type { UnitDef } from "$lib/converters/_base";
+  import { untrack } from "svelte";
+  import { settings } from "$lib/stores/settings";
 
-  export let title: string;
-  export let icon: ComponentType = Calculator;
-  export let units: UnitDef[];
-  export let convert: (value: number, from: string, to: string) => number;
-  export let defaultFrom: string = units[0].value;
-  export let defaultTo: string = units[1].value;
+  interface Props {
+    title: string;
+    icon?: ComponentType;
+    units: UnitDef[];
+    convert: (value: number, from: string, to: string) => number;
+    defaultFrom?: string;
+    defaultTo?: string;
+    standalone?: boolean;
+  }
 
-  let rawValue = "";
-  let inputDisplay = "";
-  $: fromUnit = defaultFrom;
-  $: toUnit = defaultTo;
+  const {
+    title,
+    icon = Calculator,
+    units,
+    convert,
+    defaultFrom = units[0].value,
+    defaultTo = units[1].value,
+    standalone = false,
+  }: Props = $props();
 
+  let rawValue = $state("");
+  let inputDisplay = $state("");
   let inputEl: HTMLInputElement;
-  let mirrorWidth = 0;
-  $: suffixLeft = 16 + mirrorWidth + 8;
+  let mirrorWidth = $state(0);
+
+  const suffixLeft = $derived(16 + mirrorWidth + 8);
+
+  function resolveUnit(system: string, fallback: string): string {
+    if (system === "default") return fallback;
+    const isImperial = (g: string) => g.includes("Imperial");
+    const isMetric = (g: string) => g.includes("Metric") || g.includes("SI");
+    const check = system === "imperial" ? isImperial : isMetric;
+    return units.find((u) => check(u.group))?.value ?? fallback;
+  }
+
+  let fromUnit = $state(
+    untrack(() => resolveUnit($settings.unitSystem, defaultFrom)),
+  );
+  let toUnit = $state(
+    untrack(() => resolveUnit($settings.unitSystem, defaultTo)),
+  );
+
+  $effect(() => {
+    fromUnit = resolveUnit($settings.unitSystem, defaultFrom);
+    toUnit = resolveUnit($settings.unitSystem, defaultTo);
+  });
 
   function unitLabel(value: string): string {
     return units.find((u) => u.value === value)?.label ?? value;
   }
 
-  function groupedUnits(list: UnitDef[]): [string, UnitDef[]][] {
+  function groupBySystem(list: UnitDef[]): [string, UnitDef[]][] {
     const map = new Map<string, UnitDef[]>();
     for (const u of list) {
       if (!map.has(u.group)) map.set(u.group, []);
@@ -31,6 +64,8 @@
     }
     return [...map.entries()];
   }
+
+  const groupedUnits = $derived(groupBySystem(units));
 
   function swap() {
     [fromUnit, toUnit] = [toUnit, fromUnit];
@@ -42,12 +77,12 @@
     return rounded.toLocaleString("en-US", { maximumSignificantDigits: 7 });
   }
 
-  $: result = (() => {
+  const result = $derived.by(() => {
     const num = parseFloat(rawValue);
     if (isNaN(num)) return null;
     const converted = convert(num, fromUnit, toUnit);
     return isNaN(converted) ? null : converted;
-  })();
+  });
 
   function onInput(e: Event) {
     const val = (e.target as HTMLInputElement).value;
@@ -69,11 +104,14 @@
   }
 </script>
 
-<div class="card space-y-4">
-  <h2 class="flex items-center gap-2 text-xl font-semibold text-sky-400">
-    <svelte:component this={icon} size={22} />
-    {title}
-  </h2>
+<div class={standalone ? "space-y-4" : "card space-y-4"}>
+  {#if !standalone}
+    {@const Icon = icon}
+    <h2 class="flex items-center gap-2 text-xl font-semibold text-sky-400">
+      <Icon size={22} />
+      {title}
+    </h2>
+  {/if}
 
   <div
     class="flex flex-col gap-4 sm:grid sm:grid-cols-[1fr_auto_1fr] sm:items-end sm:gap-x-2"
@@ -86,7 +124,7 @@
           >From</label
         >
         <select id="from-unit" class="select-field" bind:value={fromUnit}>
-          {#each groupedUnits(units) as [group, groupUnits]}
+          {#each groupedUnits as [group, groupUnits]}
             <optgroup label={group}>
               {#each groupUnits as unit}
                 <option value={unit.value}
@@ -102,7 +140,7 @@
         class="flex h-[42px] w-[42px] flex-shrink-0 items-center justify-center rounded-lg border border-slate-600 text-slate-400
                transition-colors hover:border-sky-500 hover:text-sky-400"
         title="Swap units"
-        on:click={swap}
+        onclick={swap}
       >
         <ArrowUpDown size={18} class="sm:hidden" />
         <ArrowLeftRight size={18} class="hidden sm:block" />
@@ -116,7 +154,7 @@
         >To</label
       >
       <select id="to-unit" class="select-field" bind:value={toUnit}>
-        {#each groupedUnits(units) as [group, groupUnits]}
+        {#each groupedUnits as [group, groupUnits]}
           <optgroup label={group}>
             {#each groupUnits as unit}
               <option value={unit.value}
@@ -149,9 +187,9 @@
           class="h-full w-full bg-transparent px-4 text-slate-100 placeholder-slate-400 outline-none"
           placeholder="Enter value"
           bind:this={inputEl}
-          on:input={onInput}
-          on:blur={onBlur}
-          on:focus={onFocus}
+          oninput={onInput}
+          onblur={onBlur}
+          onfocus={onFocus}
         />
         {#if rawValue !== ""}
           <span

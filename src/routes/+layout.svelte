@@ -5,6 +5,7 @@
   import { onMount } from "svelte";
   import { afterNavigate } from "$app/navigation";
   import { PUBLIC_GA_MEASUREMENT_ID } from "$env/static/public";
+  import { settings } from "$lib/stores/settings";
 
   $: webManifestLink = pwaInfo ? pwaInfo.webManifest.linkTag : "";
 
@@ -40,6 +41,8 @@
   <slot />
 </main>
 
-{#await import("$lib/components/ReloadPrompt.svelte") then { default: ReloadPrompt }}
-  <ReloadPrompt />
-{/await}
+{#if $settings.offlineEnabled === true}
+  {#await import("$lib/components/ReloadPrompt.svelte") then { default: ReloadPrompt }}
+    <ReloadPrompt />
+  {/await}
+{/if}

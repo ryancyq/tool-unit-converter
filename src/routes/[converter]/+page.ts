@@ -4,6 +4,7 @@ import { error } from "@sveltejs/kit";
 export { entries };
 
 export function load({ params }: { params: { converter: string } }) {
-  if (!get(params.converter)) error(404);
-  return { slug: params.converter };
+  const converter = get(params.converter);
+  if (!converter) error(404);
+  return { slug: params.converter, toolName: converter.label };
 }

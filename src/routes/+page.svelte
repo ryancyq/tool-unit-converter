@@ -1,13 +1,11 @@
 <script lang="ts">
-  import { base } from "$app/paths";
-  import { Monitor } from "lucide-svelte";
-  import { all } from "$lib/converters/index";
+  import { getTools } from "$lib/tools";
 
-  const converters = all();
+  const tools = getTools();
 </script>
 
 <svelte:head>
-  <title>Conversion Tools</title>
+  <title>Unit Conversion Tool</title>
   <meta
     name="description"
     content="Unit and measurement conversion tools — works offline"
@@ -21,30 +19,19 @@
   </header>
 
   <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-    {#each converters as c}
+    {#each tools as tool}
       <a
-        href="{base}/{c.slug}"
+        href={tool.href}
         class="card group flex flex-col gap-3 transition-colors hover:border hover:border-sky-600"
       >
-        <svelte:component this={c.icon} size={32} class="text-sky-400" />
+        <svelte:component this={tool.icon} size={32} class="text-sky-400" />
         <span
           class="text-lg font-semibold text-sky-300 group-hover:text-sky-200"
-          >{c.label}</span
         >
-        <span class="text-sm text-slate-400">{c.desc}</span>
+          {tool.label}
+        </span>
+        <span class="text-sm text-slate-400">{tool.desc}</span>
       </a>
     {/each}
-    <a
-      href="{base}/screen-ppi"
-      class="card group flex flex-col gap-3 transition-colors hover:border hover:border-sky-600"
-    >
-      <Monitor size={32} class="text-sky-400" />
-      <span class="text-lg font-semibold text-sky-300 group-hover:text-sky-200"
-        >Screen PPI</span
-      >
-      <span class="text-sm text-slate-400"
-        >PPI, megapixels, aspect ratio — macOS HiDPI scaling check</span
-      >
-    </a>
   </div>
 </div>
