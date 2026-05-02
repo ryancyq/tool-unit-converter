@@ -13,9 +13,9 @@ export default defineConfig({
       registerType: "prompt",
       injectRegister: null,
       manifest: {
-        name: "Unit Conversion Tool",
-        short_name: "Unit Converters",
-        description: "Unit and measurement conversion tool — works offline",
+        name: "Kaeru°",
+        short_name: "Kaeru°",
+        description: "Hop between units — works offline",
         theme_color: "#1e293b",
         background_color: "#0f172a",
         display: "standalone",

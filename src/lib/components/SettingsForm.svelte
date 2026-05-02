@@ -12,7 +12,7 @@
     {
       value: "default",
       label: "Default",
-      desc: "Use each converter's built-in default units",
+      desc: "Use each tool's built-in default units",
     },
     {
       value: "metric",
@@ -75,7 +75,7 @@
   {:else}
     <h2 class="mb-1 text-sm font-semibold text-slate-200">Unit system</h2>
     <p class="mb-3 text-xs text-slate-500">
-      Controls which units are pre-selected on converter pages
+      Controls which units are pre-selected on tool pages
     </p>
     <div class="space-y-2">
       {#each unitSystems as sys}

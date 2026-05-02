@@ -8,7 +8,7 @@
 </script>
 
 <svelte:head>
-  <title>{converter.title} · Unit Conversion</title>
+  <title>{converter.title} · Kaeru°</title>
 </svelte:head>
 
 <Converter
