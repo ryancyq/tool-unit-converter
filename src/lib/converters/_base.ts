@@ -7,6 +7,8 @@ export type UnitDef = {
   group: string;
 };
 
+export type SuggestedPair = { from: string; to: string };
+
 export abstract class Converter {
   abstract readonly slug: string;
   abstract readonly order: number;
@@ -15,7 +17,9 @@ export abstract class Converter {
   abstract readonly icon: ComponentType;
   abstract readonly desc: string;
   abstract readonly units: UnitDef[];
-  abstract readonly defaultFrom: string;
-  abstract readonly defaultTo: string;
+  abstract readonly suggested: Record<
+    "default" | "metric" | "imperial",
+    SuggestedPair
+  >;
   abstract convert(value: number, from: string, to: string): number;
 }

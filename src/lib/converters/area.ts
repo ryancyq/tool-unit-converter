@@ -9,8 +9,11 @@ class AreaConverter extends LinearConverter {
   label = "Area";
   icon = Grid2x2;
   desc = "m², ha, ac, ft²…";
-  defaultFrom = "m2";
-  defaultTo = "ft2";
+  suggested = {
+    default: { from: "km2", to: "m2" },
+    metric: { from: "km2", to: "m2" },
+    imperial: { from: "mi2", to: "ac" },
+  };
   units: UnitDef[] = [
     {
       label: "km²",

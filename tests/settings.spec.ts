@@ -2,21 +2,22 @@ import { test, expect } from "@playwright/test";
 import { waitForHydration } from "./helpers";
 
 test.describe("settings page", () => {
-  test("renders heading and unit system options", async ({ page }) => {
+  test("renders unit system options and offline toggle", async ({ page }) => {
     await page.goto("/settings");
     await waitForHydration(page);
-    await expect(page.getByRole("heading", { name: "Settings" })).toBeVisible();
     await expect(page.getByRole("button", { name: "Default" })).toBeVisible();
     await expect(
       page.getByRole("button", { name: "Metric / SI" }),
     ).toBeVisible();
     await expect(page.getByRole("button", { name: "Imperial" })).toBeVisible();
+    await expect(page.getByRole("switch")).toBeVisible();
   });
 
-  test("back button returns to home", async ({ page }) => {
+  test("back button returns to previous page", async ({ page }) => {
+    await page.goto("/");
     await page.goto("/settings");
     await waitForHydration(page);
-    await page.getByRole("link", { name: "Back" }).click();
+    await page.getByRole("button", { name: "Back" }).click();
     await expect(page).toHaveURL("/");
   });
 

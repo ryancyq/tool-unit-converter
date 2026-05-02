@@ -1,7 +1,7 @@
 <script lang="ts">
   import { ArrowLeftRight, ArrowUpDown, Calculator } from "lucide-svelte";
   import type { ComponentType } from "svelte";
-  import type { UnitDef } from "$lib/converters/_base";
+  import type { UnitDef, SuggestedPair } from "$lib/converters/_base";
   import { untrack } from "svelte";
   import { settings } from "$lib/stores/settings";
 
@@ -10,8 +10,7 @@
     icon?: ComponentType;
     units: UnitDef[];
     convert: (value: number, from: string, to: string) => number;
-    defaultFrom?: string;
-    defaultTo?: string;
+    suggested: Record<"default" | "metric" | "imperial", SuggestedPair>;
     standalone?: boolean;
   }
 
@@ -20,8 +19,7 @@
     icon = Calculator,
     units,
     convert,
-    defaultFrom = units[0].value,
-    defaultTo = units[1].value,
+    suggested,
     standalone = false,
   }: Props = $props();
 
@@ -32,24 +30,12 @@
 
   const suffixLeft = $derived(16 + mirrorWidth + 8);
 
-  function resolveUnit(system: string, fallback: string): string {
-    if (system === "default") return fallback;
-    const isImperial = (g: string) => g.includes("Imperial");
-    const isMetric = (g: string) => g.includes("Metric") || g.includes("SI");
-    const check = system === "imperial" ? isImperial : isMetric;
-    return units.find((u) => check(u.group))?.value ?? fallback;
-  }
-
-  let fromUnit = $state(
-    untrack(() => resolveUnit($settings.unitSystem, defaultFrom)),
-  );
-  let toUnit = $state(
-    untrack(() => resolveUnit($settings.unitSystem, defaultTo)),
-  );
+  let fromUnit = $state(untrack(() => suggested[$settings.unitSystem].from));
+  let toUnit = $state(untrack(() => suggested[$settings.unitSystem].to));
 
   $effect(() => {
-    fromUnit = resolveUnit($settings.unitSystem, defaultFrom);
-    toUnit = resolveUnit($settings.unitSystem, defaultTo);
+    fromUnit = suggested[$settings.unitSystem].from;
+    toUnit = suggested[$settings.unitSystem].to;
   });
 
   function unitLabel(value: string): string {

@@ -9,8 +9,11 @@ class LengthConverter extends LinearConverter {
   label = "Length";
   icon = Ruler;
   desc = "km, m, cm, mi, ft, in…";
-  defaultFrom = "m";
-  defaultTo = "ft";
+  suggested = {
+    default: { from: "km", to: "m" },
+    metric: { from: "km", to: "m" },
+    imperial: { from: "mi", to: "ft" },
+  };
   units: UnitDef[] = [
     { label: "km", value: "km", description: "Kilometre", group: "Metric" },
     { label: "m", value: "m", description: "Metre", group: "Metric" },

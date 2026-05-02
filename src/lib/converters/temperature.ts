@@ -9,8 +9,11 @@ class TemperatureConverter extends Converter {
   label = "Temperature";
   icon = Thermometer;
   desc = "°C, °F, K";
-  defaultFrom = "c";
-  defaultTo = "f";
+  suggested = {
+    default: { from: "c", to: "f" },
+    metric: { from: "c", to: "k" },
+    imperial: { from: "f", to: "c" },
+  };
   units: UnitDef[] = [
     { label: "°C", value: "c", description: "Celsius", group: "Metric" },
     { label: "K", value: "k", description: "Kelvin", group: "Metric" },

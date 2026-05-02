@@ -16,37 +16,37 @@ async function convert(
 }
 
 test.describe("Length converter", () => {
-  test("loads with default m → ft units", async ({ page }) => {
+  test("loads with default km → m units", async ({ page }) => {
     await page.goto("/length");
-    await expect(page.locator("#from-unit")).toHaveValue("m");
-    await expect(page.locator("#to-unit")).toHaveValue("ft");
+    await expect(page.locator("#from-unit")).toHaveValue("km");
+    await expect(page.locator("#to-unit")).toHaveValue("m");
   });
 
-  test("converts 1 m to feet", async ({ page }) => {
-    await convert(page, "/length", "1", "3.28084", "ft");
+  test("converts 1 km to metres", async ({ page }) => {
+    await convert(page, "/length", "1", "1,000", "m");
   });
 
   test("swaps units", async ({ page }) => {
     await page.goto("/length");
     await waitForHydration(page);
-    await page.fill("#value-input", "1");
+    await page.fill("#value-input", "1000");
     await page.click('button[title="Swap units"]');
-    await expect(page.locator("#from-unit")).toHaveValue("ft");
-    await expect(page.locator("#to-unit")).toHaveValue("m");
-    await expect(page.locator("#result-output")).toContainText("0.3048");
-    await expect(page.locator("#result-output")).toContainText("m");
+    await expect(page.locator("#from-unit")).toHaveValue("m");
+    await expect(page.locator("#to-unit")).toHaveValue("km");
+    await expect(page.locator("#result-output")).toContainText("1");
+    await expect(page.locator("#result-output")).toContainText("km");
   });
 });
 
 test.describe("Weight converter", () => {
-  test("loads with default kg → lb units", async ({ page }) => {
+  test("loads with default kg → g units", async ({ page }) => {
     await page.goto("/weight");
     await expect(page.locator("#from-unit")).toHaveValue("kg");
-    await expect(page.locator("#to-unit")).toHaveValue("lb");
+    await expect(page.locator("#to-unit")).toHaveValue("g");
   });
 
-  test("converts 1 kg to pounds", async ({ page }) => {
-    await convert(page, "/weight", "1", "2.204623", "lb");
+  test("converts 1 kg to grams", async ({ page }) => {
+    await convert(page, "/weight", "1", "1,000", "g");
   });
 });
 
@@ -72,49 +72,51 @@ test.describe("Temperature converter", () => {
 });
 
 test.describe("Area converter", () => {
-  test("loads with default m² → ft² units", async ({ page }) => {
+  test("loads with default km² → m² units", async ({ page }) => {
     await page.goto("/area");
-    await expect(page.locator("#from-unit option:checked")).toContainText("m²");
-    await expect(page.locator("#to-unit option:checked")).toContainText("ft²");
+    await expect(page.locator("#from-unit option:checked")).toContainText(
+      "km²",
+    );
+    await expect(page.locator("#to-unit option:checked")).toContainText("m²");
   });
 
-  test("converts 1 m² to square feet", async ({ page }) => {
-    await convert(page, "/area", "1", "10.76392", "ft²");
+  test("converts 1 km² to square metres", async ({ page }) => {
+    await convert(page, "/area", "1", "1,000,000", "m²");
   });
 });
 
 test.describe("Volume converter", () => {
-  test("loads with default L → gal units", async ({ page }) => {
+  test("loads with default L → mL units", async ({ page }) => {
     await page.goto("/volume");
     await expect(page.locator("#from-unit")).toHaveValue("L");
-    await expect(page.locator("#to-unit")).toHaveValue("gal");
+    await expect(page.locator("#to-unit")).toHaveValue("mL");
   });
 
-  test("converts 1 L to US gallons", async ({ page }) => {
-    await convert(page, "/volume", "1", "0.2641721", "gal");
+  test("converts 1 L to millilitres", async ({ page }) => {
+    await convert(page, "/volume", "1", "1,000", "mL");
   });
 });
 
 test.describe("Speed converter", () => {
-  test("loads with default km/h → mph units", async ({ page }) => {
+  test("loads with default km/h → m/s units", async ({ page }) => {
     await page.goto("/speed");
     await expect(page.locator("#from-unit")).toHaveValue("kmh");
-    await expect(page.locator("#to-unit")).toHaveValue("mph");
+    await expect(page.locator("#to-unit")).toHaveValue("ms");
   });
 
-  test("converts 1 km/h to mph", async ({ page }) => {
-    await convert(page, "/speed", "1", "0.6213712", "mph");
+  test("converts 1 km/h to m/s", async ({ page }) => {
+    await convert(page, "/speed", "1", "0.2777778", "m/s");
   });
 });
 
 test.describe("Data converter", () => {
-  test("loads with default MB → MiB units", async ({ page }) => {
+  test("loads with default GB → GiB units", async ({ page }) => {
     await page.goto("/data");
-    await expect(page.locator("#from-unit")).toHaveValue("MB");
-    await expect(page.locator("#to-unit")).toHaveValue("MiB");
+    await expect(page.locator("#from-unit")).toHaveValue("GB");
+    await expect(page.locator("#to-unit")).toHaveValue("GiB");
   });
 
-  test("converts 1 MB to MiB", async ({ page }) => {
-    await convert(page, "/data", "1", "0.9536743", "MiB");
+  test("converts 1 GB to GiB", async ({ page }) => {
+    await convert(page, "/data", "1", "0.9313226", "GiB");
   });
 });

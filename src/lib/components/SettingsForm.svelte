@@ -57,7 +57,9 @@
     <p class="mb-2 text-xs font-medium uppercase tracking-wide text-slate-400">
       Unit system
     </p>
-    <div class="flex overflow-hidden rounded-lg border border-slate-700">
+    <div
+      class="flex divide-x divide-slate-700 overflow-hidden rounded-lg border border-slate-700"
+    >
       {#each unitSystems as sys}
         <button
           class="flex-1 py-1.5 text-sm transition-colors
@@ -98,7 +100,7 @@
 </div>
 
 <!-- Offline toggle -->
-<div class={compact ? "" : "border-t border-slate-700 pt-6"}>
+<div class="border-t border-slate-700 {compact ? 'pt-4' : 'pt-6'}">
   <div class="flex items-center justify-between">
     <div>
       {#if compact}

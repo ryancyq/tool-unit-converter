@@ -9,8 +9,11 @@ class SpeedConverter extends LinearConverter {
   label = "Speed";
   icon = Gauge;
   desc = "m/s, km/h, mph, kn, Mach…";
-  defaultFrom = "kmh";
-  defaultTo = "mph";
+  suggested = {
+    default: { from: "kmh", to: "ms" },
+    metric: { from: "kmh", to: "ms" },
+    imperial: { from: "mph", to: "fts" },
+  };
   units: UnitDef[] = [
     { label: "m/s", value: "ms", description: "Metre/second", group: "Metric" },
     {

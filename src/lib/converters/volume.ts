@@ -9,8 +9,11 @@ class VolumeConverter extends LinearConverter {
   label = "Volume";
   icon = FlaskConical;
   desc = "L, mL, gal, pt, fl oz…";
-  defaultFrom = "L";
-  defaultTo = "gal";
+  suggested = {
+    default: { from: "L", to: "mL" },
+    metric: { from: "L", to: "mL" },
+    imperial: { from: "gal", to: "floz" },
+  };
   units: UnitDef[] = [
     { label: "m³", value: "m3", description: "Cubic metre", group: "Metric" },
     { label: "L", value: "L", description: "Litre", group: "Metric" },

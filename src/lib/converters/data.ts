@@ -9,8 +9,11 @@ class DataConverter extends LinearConverter {
   label = "Data";
   icon = HardDrive;
   desc = "B, KB, MB, GB, TiB…";
-  defaultFrom = "MB";
-  defaultTo = "MiB";
+  suggested = {
+    default: { from: "GB", to: "GiB" },
+    metric: { from: "GB", to: "GiB" },
+    imperial: { from: "GB", to: "GiB" },
+  };
   units: UnitDef[] = [
     { label: "b", value: "b", description: "Bit", group: "Decimal (SI)" },
     { label: "B", value: "B", description: "Byte", group: "Decimal (SI)" },

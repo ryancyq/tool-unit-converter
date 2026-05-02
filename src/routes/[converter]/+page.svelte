@@ -16,7 +16,6 @@
   icon={converter.icon}
   units={converter.units}
   convert={(v, f, t) => converter.convert(v, f, t)}
-  defaultFrom={converter.defaultFrom}
-  defaultTo={converter.defaultTo}
+  suggested={converter.suggested}
   standalone={true}
 />

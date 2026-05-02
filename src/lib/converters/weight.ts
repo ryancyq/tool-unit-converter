@@ -9,8 +9,11 @@ class WeightConverter extends LinearConverter {
   label = "Weight";
   icon = Scale;
   desc = "kg, g, lb, oz, st…";
-  defaultFrom = "kg";
-  defaultTo = "lb";
+  suggested = {
+    default: { from: "kg", to: "g" },
+    metric: { from: "kg", to: "g" },
+    imperial: { from: "lb", to: "oz" },
+  };
   units: UnitDef[] = [
     { label: "t", value: "t", description: "Tonne", group: "Metric" },
     { label: "kg", value: "kg", description: "Kilogram", group: "Metric" },
